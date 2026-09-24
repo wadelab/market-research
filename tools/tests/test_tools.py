@@ -92,7 +92,7 @@ def test_btc_cycle_table_on_synthetic():
     price = 10 * np.exp(t / 900) * (1 + 0.8 * np.sin(2 * np.pi * (t - 500) / 1461))
     s = pd.Series(price, index=idx)
     tab = bc.cycle_table(s)
-    assert len(tab) == 4
+    assert len(tab) == 4                      # synthetic series starts in 2011, before the first halving
     assert tab["complete"].iloc[:3].all() and not tab["complete"].iloc[3]
     now = bc.where_now(s)
     assert now["days_since_halving"] == (pd.Timestamp("2026-09-24") - pd.Timestamp("2024-04-20")).days
@@ -246,3 +246,35 @@ def test_find_stooq_zip_copies_into_cache(tmp_path, monkeypatch):
     assert fd.find_stooq_zip(None) == found          # second call uses the cache
     monkeypatch.setattr(fd, "CACHE", tmp_path / "empty")
     assert fd.find_stooq_zip(None) is None
+
+
+def test_fixed_start_rates_synthetic():
+    prices = _synthetic_prices()
+    fx = ts.fixed_start_rates(prices, 730, multiples=(3, 10))
+    allrows = fx[fx["bucket"] == "ALL"]
+    assert {"start", "alive", "n_10x", "rate_10x", "censored"} <= set(allrows.columns)
+    # AAA is flat at 1.0 until row ~1000 (Nov 2018) then runs to 12 by row 1300 (Jan 2020):
+    # from 2018-01-01 the 730-day forward max is 12x; from 2019-01-01 the entry is already ~2.6 so <10x
+    r2018 = allrows[allrows["start"].str.startswith("2018")].iloc[0]
+    assert r2018["n_10x"] == 1 and r2018["alive"] == 3
+    r2019 = allrows[allrows["start"].str.startswith("2019")].iloc[0]
+    assert r2019["n_10x"] == 0 and r2019["n_3x"] == 2      # AAA (~4.6x) and CCC (~3.2x)
+    # from 2016-01-01: nobody 10x's; CCC (10x over 4 years) makes 3.16x, so n_3x == 1
+    r2016 = allrows[allrows["start"].str.startswith("2016")].iloc[0]
+    assert r2016["n_10x"] == 0 and r2016["n_3x"] == 1
+    assert allrows["censored"].iloc[-1]
+
+
+def test_btc_cycle_peak_window():
+    idx = pd.date_range("2016-01-01", "2026-09-24")
+    s = pd.Series(10.0, index=idx)
+    s[pd.Timestamp("2017-12-16")] = 100.0     # 2016-cycle peak, day 525
+    s[pd.Timestamp("2018-12-15")] = 5.0       # low  (min after peak)
+    s[pd.Timestamp("2024-03-13")] = 500.0     # pre-2024-halving run-up: must NOT be the 2020 cycle peak
+    s[pd.Timestamp("2021-11-10")] = 300.0     # true 2020-cycle peak
+    tab = bc.cycle_table(s)
+    r2016 = tab[tab["halving"] == "2016-07-09"].iloc[0]
+    assert r2016["peak_date"] == "2017-12-16" and r2016["post_low_date"] == "2018-12-15"
+    r2020 = tab[tab["halving"] == "2020-05-11"].iloc[0]
+    assert r2020["peak_date"] == "2021-11-10" and r2020["peak"] == 300.0
+    assert "2012-11-28" not in set(tab["halving"])          # data start after that halving: row skipped

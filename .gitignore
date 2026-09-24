@@ -12,3 +12,5 @@ __pycache__/
 *.pyc
 .venv/
 .env
+!data/derived/
+!data/derived/*.csv

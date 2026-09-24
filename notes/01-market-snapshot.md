@@ -203,6 +203,15 @@ hostile to cash-generative names, and the ETF bid has kept crypto liquid despite
 
 ## C. Crypto cycle status
 
+**Measured from daily closes (Yahoo BTC-USD via `tools/btc_cycle.py`, 2026-09-25):** cycle peak close
+$124,752.53 on 2025-10-06, 534 days after the halving (vs 525 and 546 days in the two prior cycles);
+lowest close since: **$58,558.86 on 2026-06-30** (−53.1 %; prior cycles −83.4 % and −76.6 %, reached
+364 and 378 days after the peak; this cycle is 267 days past its peak and 353 days at 2026-09-24).
+Close on 2026-09-24: $84,561.80, −32.2 % from the peak, 1.48x to regain it. Peak multiple from the
+halving price: 30.0x (2016 cycle), 7.9x (2020), 1.9x (2024): each cycle's peak multiple has fallen by
+roughly 4x.
+
+
 | Item | Status | Date | Source |
 |---|---|---|---|
 | Halving | 4th halving 2024-04-19/20; reward 6.25→3.125 BTC; ~450 BTC/day new supply | | [46] |

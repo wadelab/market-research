@@ -46,3 +46,14 @@ Newest entries at the bottom. Times are UTC.
   no zip is present; universe requires the zip.
 - 16:55 Wade downloaded d_us_txt.zip and h_uk_txt.zip. Added UK support: '.uk.txt' members map to
   '.L' symbols, intraday files collapse to daily closes, --include-uk adds UK stocks to the universe.
+
+## 2026-09-25
+
+- 00:10 Data landed (core 578 KB, watch 2.1 MB, universe 8 MB Parquet, meta). Quality: split-adjusted
+  (NVDA/TSLA/SMCI check pass), 12 years, 5,277 universe symbols, caps for 5,298; 7 watch symbols
+  absent from Stooq/Yahoo (APT-USD, GMET.L, HYPE-USD, MNMD, NSCL, SILV, SUI-USD).
+- 00:30 Fixed btc_cycle.py (peak searched within 24 months of the halving; cycles before the data
+  start are skipped) and added fixed-start-date base rates to tenx_screener.py. 22 tests pass.
+- 00:50 Ran the screens. Wrote notes/04-measured-base-rates.md; updated 03-candidates.md (§1a data-
+  verified caps, §1b 24-month returns), 01-market-snapshot.md (measured BTC cycle numbers), the four
+  deep dives, data/watchlist.csv (real entry prices/caps). Derived tables committed under data/derived/.

@@ -1,8 +1,8 @@
 # Deep dive: IREN Limited (IREN, Nasdaq)
 
-**Date:** 2026-09-24  **Price at writing:** [NOT FOUND] (search summary gave cap only)
-**Market cap:** ~$17.6B (early Sep 2026; secondary article, ai-semis.md [43]); an undated 2026 post
-says $14B [101]. **Evidence grade:** high for operating figures (8-K, 10-K in search results),
+**Date:** 2026-09-24  **Price at writing:** $47.05 (2026-09-24 close, Stooq)  **Market cap:** $18.5B
+(Nasdaq screener, 2026-09-24; the screen's search figure was ~$17.6B [43]). 24-month high $76.41 on
+2025-11-05 (8.5x from the Sep 2024 close); now 62 % of that high. **Evidence grade:** high for operating figures (8-K, 10-K in search results),
 medium for the cap.
 
 ## Thesis in one paragraph

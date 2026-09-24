@@ -1,8 +1,9 @@
 # Deep dive: Centrus Energy (LEU, NYSE American)
 
-**Date:** 2026-09-24  **Price at writing:** $151.64 (23 Sep 2026; day range $150.41-157.92)
-(nuclear-energy-power.md [44])  **Market cap:** [NOT FOUND]; ~$3B on a ~20M share count
-[from memory, verify]. **Evidence grade:** high for fundamentals (SEC filings), low for the cap.
+**Date:** 2026-09-24  **Price at writing:** $151.31 (2026-09-24 close, Stooq)  **Market cap:** $2.99B
+(Nasdaq screener, 2026-09-24; confirms the ~$3B estimate). 24-month high $436.00 on 2025-10-15 (8.2x
+from the Sep 2024 close); now 35 % of that high, i.e. this name has already had its momentum 10x
+and given most of it back. **Evidence grade:** high for fundamentals (SEC filings), low for the cap.
 
 ## Thesis in one paragraph
 

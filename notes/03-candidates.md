@@ -1,9 +1,9 @@
 # Consolidated candidate list
 
-**Date:** 2026-09-24  **Status:** v1, built from the eight notes in this directory. Every number
-below is copied from a theme note and carries that note's evidence grade; nothing new was sourced
-here. Re-run `tools/watchlist.py --prices` once local data is pushed to replace the search-summary
-prices with exchange data.
+**Date:** 2026-09-24, updated 2026-09-25 with exchange data  **Status:** v1.1. Section 1 still shows
+the search-summary market caps the screens used; **section 1a gives the data-verified figures**
+(Stooq closes, Nasdaq-screener and CoinGecko caps, 2026-09-24) and section 1b what these names
+actually did over the last 24 months. See `04-measured-base-rates.md` for the measured base rates.
 
 ## 0. Verdict first
 
@@ -48,11 +48,48 @@ Names with missing market caps or memory-only figures are listed but **not score
 | 9 | Eos Energy (EOSE) | Storage | $1.17B (31 Aug 2026) | $12B | 2 | 1 | 1 | 1 | 1 | 1 | **7** | 2 % | no |
 | 10 | NANO Nuclear (NNE) | SMR | $0.98B (21 Aug 2026) | $10B | 2 | 0 | 1 | 1 | 1 | 0 | **5** | 2 % | no |
 
+### 1a. Data-verified prices and market caps (2026-09-24 close; `data/watch_meta.csv`, `data/watchlist.csv`)
+
+| Asset | Close | Market cap | vs. figure used in the screen | 10x implies |
+|---|---|---|---|---|
+| IREN | $47.05 | $18.5B | screen said ~$17.6B: consistent | $185B |
+| UBTech 9880.HK | HK$78.20 | HK$39.4B (~US$5.0B) | screen said HK$46.5B (21 Sep): stock fell further | ~US$50B |
+| Centrus LEU | $151.31 | $2.99B | screen estimated ~$3B: confirmed | $30B |
+| Pendle | $2.55 | $443M | screen said $415M: consistent | $4.4B |
+| Applied Digital APLD | $27.23 | $7.9B | screen said $7.1B | $79B |
+| Ethena ENA | $0.22 | $2.2B | consistent | $22B |
+| Quantum Computing QUBT | $9.12 | $2.06B | consistent | $21B |
+| Cipher CIFR | $18.35 | $7.6B | was [NOT FOUND] | $76B |
+| TeraWulf WULF | $16.35 | $8.2B | was [NOT FOUND] | $82B |
+| Hut 8 HUT | $102.46 | $12.6B | was [NOT FOUND] | $126B |
+| Acumen ABOS | $2.31 | $167M | was memory-only | $1.7B |
+| Cartesian RNAC | $7.87 | $238M | was memory-only | $2.4B |
+| Kyverna KYTX | $7.07 | $437M | was memory-only | $4.4B |
+| Larimar LRMR | $3.87 | $402M | was memory-only | $4.0B |
+| General Fusion GFUZ | $8.68 | $552M | was [NOT FOUND] | $5.5B |
+
+Consequences: the three miner conversions are $7.6-12.6B companies, so a 10x needs $76-126B, above
+every neocloud precedent; they move to the "2-3x if contracts perform" category with IREN. The four
+biotech names are all in the $150-450M bucket, where the pooled measured P(10x in 24 months) is
+1.3-2 % unconditionally (`04-measured-base-rates.md` §2), so their 8-12 % subjective estimates
+require the catalyst to be genuinely mispriced; the readout outcomes remain unverified.
+
+### 1b. What the 108 screened names did over the last 24 months (from 2024-09-24 close; `data/watch_prices_1d.csv.gz`)
+
+21 of 108 touched 10x from their 24-months-ago close; 11 are still at or above 10x today. This is
+**not** a base rate: these names were surfaced by the screens partly *because* they ran. Largest
+maximum multiples: Rigetti 74x, AXT 68x, SanDisk 65x, D-Wave 48x, QUBT 38x, Bloom 33x, Planet 24x,
+Unusual Machines 22x, Oklo 21x, Ondas 20x, Rocket Lab 20x, Lumentum 17x, Nebius 15x, Navitas 14x,
+AAOI 14x, Micron 13x, Hut 8 10.6x, BlackSky 10x, Credo 10x, IonQ 10x, Ouster 10x. Median current
+price of those 21 is about half their peak. Bitcoin's maximum was 1.94x, Ethereum 1.82x, Solana
+1.71x; Pendle 1.65x (now 0.62x); Ethena 3.9x (now 0.68x). The four deep-dive names' own 24-month
+maxima: IREN 8.5x (now 5.2x), Centrus 8.2x (now 2.9x), UBTech 1.8x (now 0.9x), Pendle 1.65x.
+
 **Listed, not scored (data missing or memory-only). Verification queue, in priority order:**
 
 | Asset | Why it is interesting | What is missing |
 |---|---|---|
-| Cipher (CIFR), TeraWulf (WULF), Hut 8 (HUT) | $3.8-17.7B HPC contracts with Google credit support / Anthropic anchor tenant vs probably $5-15B caps; the sub-sector most likely to hold a 10x if the contracts perform (ai-semis.md §3.2) | market caps, balance sheets, contract terms (primary filings) |
+| Cipher (CIFR), TeraWulf (WULF), Hut 8 (HUT) | $3.8-17.7B HPC contracts with Google credit support / Anthropic anchor tenant; caps now known: $7.6B / $8.2B / $12.6B (1a), so 10x implies $76-126B: demoted to 2-3x candidates | balance sheets, contract terms (primary filings) |
 | Acumen (ABOS), Cartesian (RNAC), Kyverna (KYTX), Larimar (LRMR) | Small-cap binary readouts/PDUFAs inside the window; buyout comps support 10x arithmetic (biotech.md) | all prices/caps; **2026 readout outcomes** (several may already be resolved) |
 | General Fusion (GFUZ) | ~$1B SPAC; fusion peer TAE implied ~$3B on zero revenue; LM26 results | current price, redemptions, LM26 date |
 | Lithium restart juniors (Core Lithium, ioneer, Sigma), PGM developers (PLG, Bravo), silver explorers (Dolly Varden, Abra), tungsten/antimony (Guardian, Larvotto) | Cyclical-trough or policy-driven set-ups where a sub-$500M developer re-rates to NAV (commodities-metals.md) | everything: all figures are from memory |

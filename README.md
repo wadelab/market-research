@@ -39,10 +39,17 @@ data/                     price data (see data/README.md); all tiers committed
 ## Where to start reading
 
 1. `notes/03-candidates.md` — the verdict and the ranked list (read this first).
-2. `notes/00-base-rates.md` — why the hit rate is low and what the evidence says winners had in common.
+2. `notes/00-base-rates.md` — the literature; `notes/04-measured-base-rates.md` — the measured rates from our own data.
 3. `notes/01-market-snapshot.md` — the Sep 2026 regime (Fed hiking, 10y > 5 %, CAPE ~41, crypto 12 months past its top).
 4. `notes/deep-dives/` — IREN, UBTech, Centrus, Pendle.
 5. `notes/research-todo.md` — what is unverified and what to research next.
+
+## Status (2026-09-25)
+
+Price data are in (`data/`), and `notes/04-measured-base-rates.md` replaces the estimated base rates
+with measured ones: P(10x within 24 months) for US stocks from a fixed January start averaged 0.58 %
+over 2015-2024 and never exceeded 1.9 % in any year; half of all 10x-ers are back below 2x within a
+few years. The candidate list (`03-candidates.md` §1a) now carries exchange prices and market caps.
 
 ## Status (2026-09-24)
 

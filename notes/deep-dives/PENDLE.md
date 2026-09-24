@@ -1,7 +1,8 @@
 # Deep dive: Pendle (PENDLE)
 
-**Date:** 2026-09-24  **Price at writing:** $2.39 (24 Sep 2026)  **Market cap:** $415.1M
-circulating, rank #175 (crypto.md [56][57]). **Evidence grade:** medium (DefiLlama and CoinGecko
+**Date:** 2026-09-24  **Price at writing:** $2.55 (2026-09-24, Yahoo)  **Market cap:** $443M circulating
+(CoinGecko, 2026-09-24; the screen's figure was $2.39 / $415M [56][57]). 24-month high $6.86 on
+2024-12-06; now 38 % of that. **Evidence grade:** medium (DefiLlama and CoinGecko
 figures as reported in search summaries; dated).
 
 ## Thesis in one paragraph

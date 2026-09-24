@@ -8,8 +8,10 @@ and estimate base rates by starting market-cap bucket.
 
 Input: Parquet or CSV with columns date, symbol, close (long format, as written by fetch_data.py).
 Optional --meta with columns symbol, shares: historical market cap is approximated as
-close * shares (current shares; ignores buybacks/dilution, which is a real limitation for
-exactly the kind of company that 10x's, so treat cap buckets as rough).
+close * shares (CURRENT shares). This ignores buybacks and dilution. For serial diluters with
+reverse splits the estimate is wildly too high (split-adjusted old prices x today's inflated share
+count), so a handful of micro-caps land in the >$2B buckets. Treat bucket rates as indicative and
+the ALL rows (prices only) as the reliable numbers.
 
 Method: for each symbol, for each date t, compute max(close over (t, t+window]) / close[t].
 A "10x event" is any t where that ratio >= multiple. Overlapping events for the same symbol are
@@ -104,13 +106,67 @@ def base_rates(prices: pd.DataFrame, events: pd.DataFrame, window_days: int) -> 
     return out.reset_index().rename(columns={"index": "year"})
 
 
+CAP_BINS = [0, 50e6, 300e6, 2e9, 10e9, 50e9, np.inf]
+CAP_LABELS = ["<50M", "50-300M", "300M-2B", "2-10B", "10-50B", ">50B"]
+
+
+def fixed_start_rates(prices: pd.DataFrame, window_days: int = 730, multiples=(3, 5, 10),
+                      month_day: str = "01-01", meta: pd.DataFrame | None = None) -> pd.DataFrame:
+    """Base rate from FIXED start dates (not troughs): for each year's first trading date on or after
+    <year>-<month_day>, the share of symbols alive on that date whose maximum close within the next
+    `window_days` reaches each multiple. With `meta` (symbol, shares), also broken down by the
+    approximate starting market cap (close x current shares)."""
+    wide = prices.pivot_table(index="date", columns="symbol", values="close", aggfunc="last").sort_index()
+    idx = pd.to_datetime(wide.index)
+    wide.index = idx
+    last = idx.max()
+    shares = None
+    if meta is not None and "shares" in meta:
+        shares = meta.drop_duplicates("symbol").set_index("symbol")["shares"].reindex(wide.columns)
+    rows = []
+    for year in range(idx.min().year, idx.max().year + 1):
+        anchor = pd.Timestamp(f"{year}-{month_day}")
+        pos = idx.searchsorted(anchor)
+        if pos >= len(idx) or idx[pos] > anchor + pd.Timedelta(days=14):
+            continue
+        start = idx[pos]
+        end = start + pd.Timedelta(days=window_days)
+        seg = wide.loc[(idx > start) & (idx <= end)]
+        base = wide.iloc[pos]
+        alive = base.notna() & (base > 0)
+        if alive.sum() == 0 or seg.empty:
+            continue
+        ratio = seg.max() / base
+        row = {"start": start.date().isoformat(), "alive": int(alive.sum()), "censored": bool(end > last),
+               "median_max_ratio": float(ratio[alive].median())}
+        for m in multiples:
+            row[f"n_{m}x"] = int((ratio[alive] >= m).sum())
+            row[f"rate_{m}x"] = row[f"n_{m}x"] / row["alive"]
+        rows.append(row)
+        if shares is not None:
+            cap = (base * shares)[alive]
+            bucket = pd.cut(cap, bins=CAP_BINS, labels=CAP_LABELS)
+            for b in CAP_LABELS:
+                sel = bucket == b
+                if sel.sum() == 0:
+                    continue
+                rows.append({"start": start.date().isoformat(), "bucket": b, "alive": int(sel.sum()),
+                             "censored": bool(end > last), "median_max_ratio": float(ratio[alive][sel].median()),
+                             **{f"n_{m}x": int((ratio[alive][sel] >= m).sum()) for m in multiples},
+                             **{f"rate_{m}x": float((ratio[alive][sel] >= m).mean()) for m in multiples}})
+    out = pd.DataFrame(rows)
+    if "bucket" in out:
+        out["bucket"] = out["bucket"].fillna("ALL")
+    else:
+        out["bucket"] = "ALL"
+    return out
+
+
 def add_caps(events: pd.DataFrame, meta: pd.DataFrame) -> pd.DataFrame:
     m = meta[["symbol", "shares"]].dropna()
     e = events.merge(m, on="symbol", how="left")
     e["entry_mcap_approx"] = e["entry_close"] * e["shares"]
-    bins = [0, 50e6, 300e6, 2e9, 10e9, 50e9, np.inf]
-    labels = ["<50M", "50-300M", "300M-2B", "2-10B", "10-50B", ">50B"]
-    e["cap_bucket"] = pd.cut(e["entry_mcap_approx"], bins=bins, labels=labels)
+    e["cap_bucket"] = pd.cut(e["entry_mcap_approx"], bins=CAP_BINS, labels=CAP_LABELS)
     return e
 
 
@@ -122,23 +178,35 @@ def main() -> None:
     ap.add_argument("--meta", type=Path)
     ap.add_argument("--out", type=Path)
     ap.add_argument("--min-price", type=float, default=0.0, help="ignore entries below this price (penny-stock filter)")
+    ap.add_argument("--month-day", default="01-01", help="fixed start date within each year (MM-DD)")
+    ap.add_argument("--fixed-out", type=Path, help="write the fixed-start-date table here (CSV)")
     a = ap.parse_args()
 
     prices = load_prices(a.prices)
     if a.min_price > 0:
         prices = prices[prices["close"] >= a.min_price]
+    meta = pd.read_csv(a.meta) if a.meta and a.meta.exists() else None
     events = find_events(prices, a.window_days, a.multiple)
-    if a.meta and a.meta.exists() and not events.empty:
-        events = add_caps(events, pd.read_csv(a.meta))
+    if meta is not None and not events.empty:
+        events = add_caps(events, meta)
     rates = base_rates(prices, events, a.window_days)
-
+    pd.set_option("display.width", 200)
     print(f"\n{len(events)} episodes of >= {a.multiple:g}x within {a.window_days} days "
-          f"across {prices['symbol'].nunique()} symbols\n")
+          f"across {prices['symbol'].nunique()} symbols (any entry date; trough-inclusive)\n")
     print(rates.to_string(index=False))
     if "cap_bucket" in events:
-        print("\nEpisodes by approximate starting market cap:")
+        print("\nEpisodes by approximate starting market cap (close x current shares):")
         print(events["cap_bucket"].value_counts().sort_index().to_string())
+    fixed = fixed_start_rates(prices, a.window_days, meta=meta, month_day=a.month_day)
+    print(f"\nFixed-start-date base rates (start = first trading day on/after {a.month_day} each year):\n")
+    cols = ["start", "bucket", "alive", "n_3x", "rate_3x", "n_5x", "rate_5x", "n_10x", "rate_10x",
+            "median_max_ratio", "censored"]
+    print(fixed[fixed["bucket"] == "ALL"][cols].to_string(index=False, float_format=lambda x: f"{x:.3f}"))
+    if a.fixed_out:
+        a.fixed_out.parent.mkdir(parents=True, exist_ok=True)
+        fixed.to_csv(a.fixed_out, index=False)
     if a.out:
+        a.out.parent.mkdir(parents=True, exist_ok=True)
         events.to_csv(a.out, index=False)
         print(f"\nwrote {a.out}")
 

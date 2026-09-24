@@ -25,6 +25,8 @@ from common import load_prices  # noqa: E402
 
 HALVINGS = ["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-20"]
 NEXT_HALVING_EST = "2028-04-15"
+PEAK_WINDOW_DAYS = 730   # the cycle peak is searched within 24 months of the halving, so that the
+                         # run-up into the *next* halving (e.g. Mar 2024) is not counted as this cycle's peak
 
 
 def load_btc(path: Path) -> pd.Series:
@@ -40,10 +42,13 @@ def cycle_table(btc: pd.Series, asof: pd.Timestamp | None = None) -> pd.DataFram
     rows = []
     for i, h in enumerate(hs[:-1]):
         nxt = hs[i + 1]
-        seg = btc[(btc.index >= h) & (btc.index < min(nxt, asof))]
-        if seg.empty:
+        if btc.index.min() > h:      # price file starts after this halving: the cycle cannot be measured
             continue
-        peak_date, peak = seg.idxmax(), seg.max()
+        seg = btc[(btc.index >= h) & (btc.index < min(nxt, asof))]
+        win = seg[seg.index <= h + pd.Timedelta(days=PEAK_WINDOW_DAYS)]
+        if win.empty:
+            continue
+        peak_date, peak = win.idxmax(), win.max()
         after = seg[seg.index > peak_date]
         low_date, low = (after.idxmin(), after.min()) if not after.empty else (pd.NaT, float("nan"))
         pre = btc[(btc.index < h) & (btc.index >= h - pd.Timedelta(days=548))]
@@ -58,6 +63,7 @@ def cycle_table(btc: pd.Series, asof: pd.Timestamp | None = None) -> pd.DataFram
             "peak_x_from_halving": round(peak / at_h, 2) if at_h == at_h else None,
             "post_peak_low": round(low, 2), "post_low_date": _d(low_date),
             "drawdown_from_peak_%": round(100 * (low / peak - 1), 1) if low == low else None,
+            "days_peak_to_low": (low_date - peak_date).days if low == low else None,
             "complete": bool(nxt <= asof),
         })
     return pd.DataFrame(rows)

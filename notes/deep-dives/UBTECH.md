@@ -1,7 +1,8 @@
 # Deep dive: UBTech Robotics (9880.HK)
 
-**Date:** 2026-09-24  **Price at writing:** HK$80.10 (21 Sep 2026)  **Market cap:** HK$46.5B
-(~US$6B at the peg) (quantum-robotics-space.md [56]). **Evidence grade:** medium (single result
+**Date:** 2026-09-24  **Price at writing:** HK$78.20 (2026-09-24 close, Yahoo)  **Market cap:** HK$39.4B
+(~US$5.0B; Yahoo, 2026-09-24). The screen's figure was HK$80.10 / HK$46.5B on 21 Sep [56]. 24-month
+high HK$157.70 on 2025-10-02; the stock is at half that. **Evidence grade:** medium (single result
 set, one date; interim-report figures as reported by news).
 
 ## Thesis in one paragraph
