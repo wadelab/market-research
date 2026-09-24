@@ -17,15 +17,15 @@ WATCH_SYMBOLS = [
     "MSTR", "COIN", "HOOD", "CRCL", "GLXY", "IREN", "CORZ", "CIFR", "WULF", "HUT", "MARA", "RIOT",
     # AI / semis second order
     "CRDO", "LITE", "COHR", "AAOI", "POET", "ALAB", "MRVL", "RMBS", "CAMT", "ONTO", "FORM", "ACMR",
-    "BE", "VRT", "CRWV", "NBIS", "APLD", "MU",
+    "BE", "VRT", "CRWV", "NBIS", "APLD", "MU", "SNDK", "AXTI", "NVTS", "NSCL",
     # nuclear / energy / uranium
     "OKLO", "SMR", "NNE", "LEU", "UEC", "UUUU", "DNN", "NXE", "EU", "URG", "CCJ", "SRUUF",
-    "EOSE", "FLNC", "GEV", "ORA",
+    "EOSE", "FLNC", "GEV", "ORA", "GFUZ",
     # quantum / robotics / space / defence
-    "IONQ", "RGTI", "QBTS", "QUBT", "ARQQ", "SERV", "RR", "SYM", "OUST", "HSAI",
+    "IONQ", "RGTI", "QBTS", "QUBT", "ARQQ", "QNT", "INFQ", "HQ", "SERV", "RR", "SYM", "OUST", "HSAI", "9880.HK",
     "RKLB", "ASTS", "PL", "BKSY", "RDW", "LUNR", "FLY", "KRMN", "AVAV", "RCAT", "ONDS", "KTOS", "UMAC",
-    # biotech (placeholders; theme screen will refine)
-    "XBI", "NTLA", "BEAM", "CRSP", "RXRX", "SDGR", "CMPS", "MNMD",
+    # biotech (from notes/themes/biotech.md; all pending verification)
+    "XBI", "NTLA", "BEAM", "CRSP", "RXRX", "SDGR", "CMPS", "MNMD", "ABOS", "RNAC", "KYTX", "LRMR",
     # commodities equities
     "MP", "USAR", "AG", "HL", "CDE", "EXK", "SILV", "VZLA", "ALB", "SBSW", "IMPUY",
     # crypto

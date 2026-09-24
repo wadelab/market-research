@@ -80,9 +80,19 @@ def is_common(symbol: str, name: str) -> bool:
     return True
 
 
+EXCHANGE_SUFFIXES = {"HK", "L", "TO", "V", "AX", "DE", "PA", "SS", "SZ", "T", "KS", "KQ", "SW", "MI",
+                     "AS", "ST", "CO", "HE", "OL", "NZ", "SI", "JO", "MX", "SA", "CN", "NE", "F", "BR"}
+
+
 def yahoo_symbol(sym: str) -> str:
-    # Yahoo uses '-' for share classes (BRK.B -> BRK-B); crypto symbols are already 'BTC-USD'.
-    return sym.replace(".", "-")
+    """Yahoo uses '-' for US share classes (BRK.B -> BRK-B) but '.' for exchange suffixes
+    (9880.HK). Crypto symbols are already 'BTC-USD'."""
+    if "." in sym:
+        base, suffix = sym.rsplit(".", 1)
+        if suffix.upper() in EXCHANGE_SUFFIXES:
+            return sym
+        return f"{base}-{suffix}"
+    return sym
 
 
 def download_prices(symbols: list[str], start: str, interval: str, chunk: int = 200,

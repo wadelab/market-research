@@ -125,3 +125,10 @@ def test_watchlist_math(tmp_path):
     prices.write_text("date,symbol,close\n2026-09-24,AAA,10\n2026-10-01,AAA,25\n")
     df2 = wl.attach_prices(df, prices)
     assert df2["multiple_so_far"].iloc[0] == 2.5 and df2["remaining_x"].iloc[0] == 4.0
+
+
+def test_yahoo_symbol_mapping():
+    assert fd.yahoo_symbol("BRK.B") == "BRK-B"
+    assert fd.yahoo_symbol("9880.HK") == "9880.HK"
+    assert fd.yahoo_symbol("BTC-USD") == "BTC-USD"
+    assert fd.yahoo_symbol("NVDA") == "NVDA"
