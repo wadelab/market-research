@@ -32,3 +32,12 @@ WATCH_SYMBOLS = [
     "BTC-USD", "ETH-USD", "SOL-USD", "HYPE-USD", "LINK-USD", "AAVE-USD", "SUI-USD", "APT-USD",
     "ENA-USD", "PENDLE-USD", "DOGE-USD", "XRP-USD", "BNB-USD",
 ]
+
+
+# CoinGecko ids for the crypto symbols above (one market-cap request instead of per-symbol Yahoo calls).
+COINGECKO_IDS = {
+    "BTC-USD": "bitcoin", "ETH-USD": "ethereum", "SOL-USD": "solana", "HYPE-USD": "hyperliquid",
+    "LINK-USD": "chainlink", "AAVE-USD": "aave", "SUI-USD": "sui", "APT-USD": "aptos",
+    "ENA-USD": "ethena", "PENDLE-USD": "pendle", "DOGE-USD": "dogecoin", "XRP-USD": "ripple",
+    "BNB-USD": "binancecoin",
+}

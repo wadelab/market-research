@@ -16,9 +16,13 @@ command with `uv run`. Dependencies live in `pyproject.toml`; `uv.lock` is commi
 ## Data workflow (sandbox cannot reach Yahoo Finance)
 
 1. Locally: `uv run python tools/fetch_data.py --tier core` and `--tier watch`. Both write a few MB of
-   gzip CSV to `data/` and are safe to commit.
-2. Optionally: `uv run python tools/fetch_data.py --tier universe` (all US common stocks, weekly closes,
-   12 years, Parquet ~10-15 MB; market caps from the Nasdaq screener in one request). Commit it too.
+   gzip CSV to `data/` and are safe to commit. The first run downloads Stooq's bulk US daily database
+   (one zip, a few hundred MB) into `data/.cache/` and reuses it; only the ~13 crypto symbols go
+   through Yahoo, slowly, to stay under its rate limit.
+2. `uv run python tools/fetch_data.py --tier universe` (all US common stocks, weekly closes, 12 years,
+   Parquet ~10 MB, built from the same zip; market caps from the Nasdaq screener in one request). Commit it.
+   If the zip download fails, fetch `d_us_txt.zip` from https://stooq.com/db/h/ in a browser and pass
+   `--stooq-zip <path>`.
 3. Push. The screens can then be re-run in the sandbox:
    ```
    uv run python tools/tenx_screener.py data/universe_prices_1wk.parquet --meta data/universe_meta.csv --out data/tenx_events.csv

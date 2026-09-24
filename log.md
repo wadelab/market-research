@@ -35,3 +35,9 @@ Newest entries at the bottom. Times are UTC.
   universe tier to Parquet (zstd; ~9 MB for 5,500 symbols x 626 weeks on synthetic data vs 20 MB gzip
   CSV) so all tiers are committed to git. Market caps for the universe now come from the Nasdaq screener
   in one request (fallback: per-symbol Yahoo). Added tools/common.py (Parquet/CSV I/O); 14 tests pass.
+- 16:20 Wade's local run: Yahoo rate-limited everything (core 0 rows, watch 7/114 symbols, no market
+  caps) and the universe run died on an SSL error (python.org macOS Python has no root certificates).
+  Rewrote tools/fetch_data.py: US equities/ETFs from Stooq's bulk daily zip (one download, cached),
+  crypto from Yahoo in small sequential batches with 2-minute back-off and resume, market caps from the
+  Nasdaq screener + CoinGecko (one request each), all HTTP via requests + certifi. Split-adjustment
+  check on NVDA/TSLA/SMCI. 18 tests pass.

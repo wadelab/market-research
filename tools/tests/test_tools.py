@@ -158,3 +158,56 @@ def test_parse_screener_rows():
     assert m.loc[0, "market_cap"] == 5.42e12 and abs(m.loc[0, "shares"] - 5.42e12 / 223.03) < 1
     assert m.loc[1, "symbol"] == "BRK.B" and m.loc[1, "shares"] is None or np.isnan(m.loc[1, "shares"])
     assert np.isnan(m.loc[2, "last_price"])
+
+
+def _stooq_zip(tmp_path):
+    import zipfile
+    hdr = "<TICKER>,<PER>,<DATE>,<TIME>,<OPEN>,<HIGH>,<LOW>,<CLOSE>,<VOL>,<OPENINT>\n"
+    def rows(sym, closes, start="20240603"):
+        d = pd.bdate_range(start, periods=len(closes))
+        return hdr + "".join(f"{sym}.US,D,{x.strftime('%Y%m%d')},000000,1,1,1,{c},100,0\n" for x, c in zip(d, closes))
+    zp = tmp_path / "d_us_txt.zip"
+    with zipfile.ZipFile(zp, "w") as z:
+        z.writestr("data/daily/us/nasdaq stocks/1/nvda.us.txt", rows("NVDA", [1200, 1210, 1220, 1230, 1240, 124, 125, 126]))
+        z.writestr("data/daily/us/nyse stocks/1/brk-b.us.txt", rows("BRK-B", [400, 401, 402, 403, 404, 405, 406, 407]))
+        z.writestr("data/daily/us/nasdaq etfs/1/xbi.us.txt", rows("XBI", [90, 91, 92, 93, 94, 95, 96, 97]))
+        z.writestr("data/daily/pl/wse stocks/pko.txt", "ignored")
+    return zp
+
+
+def test_stooq_extract_and_symbols(tmp_path):
+    zp = _stooq_zip(tmp_path)
+    assert fd.stooq_to_symbol("data/daily/us/nyse stocks/1/brk-b.us.txt") == "BRK.B"
+    assert fd.stooq_to_symbol("data/daily/pl/wse stocks/pko.txt") is None
+    d = fd.stooq_prices(zp, {"NVDA", "BRK.B", "XBI"}, start="2020-01-01")
+    assert set(d["symbol"]) == {"NVDA", "BRK.B", "XBI"} and len(d) == 24
+    assert d[d["symbol"] == "NVDA"]["date"].iloc[0] == "2024-06-03"
+    stocks = fd.stooq_prices(zp, None, start="2020-01-01", stocks_only=True)
+    assert set(stocks["symbol"]) == {"NVDA", "BRK.B"}
+    # unadjusted 10:1 split on 2024-06-10 must be flagged
+    warns = fd.check_split_adjustment(d)
+    assert warns and warns[0].startswith("NVDA")
+    # adjusted data are not flagged
+    adj = d.copy(); adj.loc[(adj["symbol"] == "NVDA") & (adj["date"] < "2024-06-10"), "close"] /= 10
+    assert fd.check_split_adjustment(adj) == []
+
+
+def test_to_weekly():
+    dates = pd.bdate_range("2024-06-03", periods=10)  # two full weeks
+    daily = pd.DataFrame({"date": dates.strftime("%Y-%m-%d"), "symbol": "AAA", "close": range(1, 11), "volume": 1.0})
+    w = fd.to_weekly(daily)
+    assert list(w.columns) == ["date", "symbol", "close"]
+    assert list(w["close"]) == [5, 10] and list(w["date"]) == ["2024-06-07", "2024-06-14"]
+
+
+def test_parse_coingecko_rows():
+    rows = [{"id": "bitcoin", "name": "Bitcoin", "current_price": 85686.0, "market_cap": 1.69e12,
+             "circulating_supply": 19.9e6, "fully_diluted_valuation": 1.8e12},
+            {"id": "unknowncoin", "name": "x", "current_price": 1, "market_cap": 1}]
+    m = fd.parse_coingecko_rows(rows, asof="2026-09-24")
+    assert len(m) == 1 and m.loc[0, "symbol"] == "BTC-USD" and m.loc[0, "market_cap"] == 1.69e12
+
+
+def test_rate_limit_detector():
+    assert fd._is_rate_limit(Exception("Too Many Requests. Rate limited. Try after a while."))
+    assert not fd._is_rate_limit(Exception("connection reset"))
