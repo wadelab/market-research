@@ -15,16 +15,20 @@ is here so that any claim about "where we are in the cycle" is tied to actual nu
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import load_prices  # noqa: E402
 
 HALVINGS = ["2012-11-28", "2016-07-09", "2020-05-11", "2024-04-20"]
 NEXT_HALVING_EST = "2028-04-15"
 
 
 def load_btc(path: Path) -> pd.Series:
-    df = pd.read_csv(path)
+    df = load_prices(path)
     df = df[df["symbol"].isin(["BTC-USD", "BTC"])]
     s = pd.Series(df["close"].to_numpy(), index=pd.to_datetime(df["date"])).sort_index()
     return s[~s.index.duplicated()]

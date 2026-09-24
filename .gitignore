@@ -1,15 +1,14 @@
-data/*.csv
-data/*.parquet
-data/*.json
+# data/: only the named tier files are committed; anything else under data/ is ignored
+data/*
 !data/README.md
+!data/watchlist.csv
+!data/core_*.csv.gz
+!data/core_meta.csv
+!data/watch_*.csv.gz
+!data/watch_meta.csv
+!data/universe_prices_1wk.parquet
+!data/universe_meta.csv
 __pycache__/
 *.pyc
 .venv/
 .env
-# tiered data: core/watch tiers are small and committed; universe tier goes to Google Drive
-!data/core_*.csv.gz
-!data/watch_*.csv.gz
-!data/core_meta.csv
-!data/watch_meta.csv
-!data/watchlist.csv
-data/universe_*

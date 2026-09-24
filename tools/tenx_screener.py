@@ -6,7 +6,7 @@ and estimate base rates by starting market-cap bucket.
     uv run python tools/tenx_screener.py data/universe_prices_1wk.csv.gz --window-days 730 --multiple 10 \
         --meta data/universe_meta.csv --out data/tenx_events.csv
 
-Input columns: date, symbol, close (long format, as written by fetch_data.py).
+Input: Parquet or CSV with columns date, symbol, close (long format, as written by fetch_data.py).
 Optional --meta with columns symbol, shares: historical market cap is approximated as
 close * shares (current shares; ignores buybacks/dilution, which is a real limitation for
 exactly the kind of company that 10x's, so treat cap buckets as rough).
@@ -19,10 +19,14 @@ Base rate = (symbols with >= 1 episode starting in a calendar year) / (symbols a
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import numpy as np
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import load_prices  # noqa: E402
 
 
 def forward_max_ratio(close: np.ndarray, dates: np.ndarray, window_days: int) -> np.ndarray:
@@ -120,7 +124,7 @@ def main() -> None:
     ap.add_argument("--min-price", type=float, default=0.0, help="ignore entries below this price (penny-stock filter)")
     a = ap.parse_args()
 
-    prices = pd.read_csv(a.prices)
+    prices = load_prices(a.prices)
     if a.min_price > 0:
         prices = prices[prices["close"] >= a.min_price]
     events = find_events(prices, a.window_days, a.multiple)

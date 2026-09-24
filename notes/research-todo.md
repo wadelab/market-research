@@ -16,7 +16,7 @@ Ordered by expected value of the information. Each needs web search (budget exha
 
 ## Data to load (run locally, see tools/README.md)
 - `uv run python tools/fetch_data.py --tier core` and `--tier watch` -> commit.
-- `uv run python tools/fetch_data.py --tier universe` -> Google Drive. Then run `tenx_screener.py` to
+- `uv run python tools/fetch_data.py --tier universe` -> commit (Parquet). Then run `tenx_screener.py` to
   replace the base-rate hypotheses in `02-framework.md` with measured rates.
 
 ## Nice to have

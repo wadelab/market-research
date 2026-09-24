@@ -33,7 +33,7 @@ notes/themes/             one screen per theme (crypto, AI/semis, nuclear, quant
 notes/deep-dives/         one file per asset that survives the screen
 notes/TEMPLATE-*.md       templates for theme screens and deep dives
 tools/                    Python analysis code (see tools/README.md)
-data/                     cached data (CSV/JSON); large files are gitignored
+data/                     price data (see data/README.md); all tiers committed
 ```
 
 ## Where to start reading

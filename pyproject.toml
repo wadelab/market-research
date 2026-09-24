@@ -8,6 +8,7 @@ dependencies = [
     "numpy>=1.26",
     "scipy>=1.12",
     "yfinance>=0.2.50",
+    "pyarrow>=25.0.1",
 ]
 
 [dependency-groups]

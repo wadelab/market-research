@@ -13,9 +13,13 @@ watchlist.csv columns:
 from __future__ import annotations
 
 import argparse
+import sys
 from pathlib import Path
 
 import pandas as pd
+
+sys.path.insert(0, str(Path(__file__).resolve().parent))
+from common import load_prices  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 WATCHLIST = ROOT / "data" / "watchlist.csv"
@@ -30,7 +34,7 @@ def load_watchlist(path: Path = WATCHLIST) -> pd.DataFrame:
 
 
 def attach_prices(df: pd.DataFrame, prices_path: Path) -> pd.DataFrame:
-    p = pd.read_csv(prices_path).sort_values("date")
+    p = load_prices(prices_path).sort_values("date")
     last = p.groupby("symbol").tail(1).set_index("symbol")
     df = df.merge(last[["date", "close"]].rename(columns={"date": "last_date", "close": "last_price"}),
                   left_on="symbol", right_index=True, how="left")

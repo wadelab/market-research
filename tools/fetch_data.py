@@ -9,11 +9,15 @@ Run this LOCALLY (the research sandbox cannot reach Yahoo Finance):
     uv run python tools/fetch_data.py --tier watch      # watchlist + theme names   -> commit to git (small)
     uv run python tools/fetch_data.py --tier universe   # all US common stocks, weekly, 12y -> Google Drive (large)
 
-Outputs (gzip CSV, long format: date,symbol,close[,volume]) go to data/. The core and watch tiers
-are a few MB at most and are safe to commit; the universe tier can be 30-60 MB and is gitignored.
+Outputs go to data/ in long format (date, symbol, close[, volume]):
+  core / watch : gzip CSV, daily, a few MB each            -> commit
+  universe     : Parquet (zstd), weekly closes only, ~10-15 MB -> commit (refresh at most quarterly)
+All three tiers live in git; no Google Drive step is needed.
 
-Also writes data/<tier>_meta.csv with current market cap and shares outstanding per symbol
-(from Yahoo fast_info), so historical market cap can be approximated as close * shares.
+Also writes data/<tier>_meta.csv with current market cap, last price and shares per symbol, so
+historical market cap can be approximated as close * shares. For core/watch this comes from Yahoo
+fast_info (one call per symbol). For the universe it comes from the Nasdaq stock screener in a
+single request, falling back to per-symbol Yahoo calls (slow, ~40 min) if that endpoint fails.
 
 Symbols come from tools/symbols.py (core/watch lists) and, for the universe tier, from the
 Nasdaq Trader symbol directory files (nasdaqlisted.txt, otherlisted.txt), filtered to common
@@ -23,8 +27,8 @@ from __future__ import annotations
 
 import argparse
 import datetime as dt
-import gzip
 import io
+import json
 import sys
 import time
 import urllib.request
@@ -37,10 +41,14 @@ ROOT = HERE.parent
 DATA = ROOT / "data"
 
 sys.path.insert(0, str(HERE))
+from common import write_prices  # noqa: E402
 from symbols import CORE_SYMBOLS, WATCH_SYMBOLS  # noqa: E402
 
 NASDAQ_LISTED = "https://www.nasdaqtrader.com/dynamic/SymDir/nasdaqlisted.txt"
 OTHER_LISTED = "https://www.nasdaqtrader.com/dynamic/SymDir/otherlisted.txt"
+NASDAQ_SCREENER = "https://api.nasdaq.com/api/screener/stocks?tableonly=true&limit=0&download=true"
+BROWSER_HEADERS = {"User-Agent": "Mozilla/5.0 (X11; Linux x86_64) research-script",
+                   "Accept": "application/json, text/plain, */*"}
 
 
 def universe_symbols() -> list[str]:
@@ -143,6 +151,40 @@ def tidy(raw: pd.DataFrame, batch: list[str]) -> pd.DataFrame:
     return long.sort_values(["symbol", "date"]).reset_index(drop=True)
 
 
+def _num(x) -> float | None:
+    if x in (None, "", "NA", "N/A"):
+        return None
+    try:
+        return float(str(x).replace("$", "").replace(",", "").strip())
+    except ValueError:
+        return None
+
+
+def parse_screener_rows(rows: list[dict], asof: str | None = None) -> pd.DataFrame:
+    """Turn Nasdaq screener rows into the meta schema (symbol, market_cap, last_price, shares, ...)."""
+    asof = asof or dt.date.today().isoformat()
+    out = []
+    for r in rows:
+        mc, px = _num(r.get("marketCap")), _num(r.get("lastsale"))
+        out.append({"symbol": str(r.get("symbol", "")).strip().replace("/", "."),
+                    "name": r.get("name"), "market_cap": mc, "last_price": px,
+                    "shares": (mc / px) if (mc and px) else None,
+                    "sector": r.get("sector"), "industry": r.get("industry"),
+                    "ipo_year": r.get("ipoyear"), "asof": asof})
+    return pd.DataFrame(out)
+
+
+def nasdaq_screener_meta() -> pd.DataFrame:
+    """Current market cap and last price for every US-listed stock in one request."""
+    req = urllib.request.Request(NASDAQ_SCREENER, headers=BROWSER_HEADERS)
+    with urllib.request.urlopen(req, timeout=120) as r:
+        payload = json.load(r)
+    rows = payload["data"]["rows"]
+    if not rows:
+        raise RuntimeError("Nasdaq screener returned no rows")
+    return parse_screener_rows(rows)
+
+
 def fetch_meta(symbols: list[str], pause: float = 0.2) -> pd.DataFrame:
     import yfinance as yf
 
@@ -162,10 +204,8 @@ def fetch_meta(symbols: list[str], pause: float = 0.2) -> pd.DataFrame:
     return pd.DataFrame(rows)
 
 
-def write_gz(df: pd.DataFrame, path: Path) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    with gzip.open(path, "wt", newline="") as f:
-        df.to_csv(f, index=False)
+def write_out(df: pd.DataFrame, path: Path) -> None:
+    write_prices(df, path)
     print(f"wrote {path} ({path.stat().st_size / 1e6:.1f} MB, {len(df):,} rows)", file=sys.stderr)
 
 
@@ -174,6 +214,11 @@ def main() -> None:
     ap.add_argument("--tier", choices=["core", "watch", "universe"], required=True)
     ap.add_argument("--years", type=int, default=12)
     ap.add_argument("--no-meta", action="store_true", help="skip market-cap/shares metadata")
+    ap.add_argument("--meta-source", choices=["auto", "nasdaq", "yfinance"], default="auto",
+                    help="universe tier only: 'nasdaq' = one screener request; 'yfinance' = per-symbol (slow)")
+    ap.add_argument("--format", choices=["auto", "csv", "parquet"], default="auto",
+                    help="auto = gzip CSV for core/watch, Parquet for universe")
+    ap.add_argument("--keep-volume", action="store_true", help="universe tier: keep the volume column")
     ap.add_argument("--out", type=Path, default=DATA)
     args = ap.parse_args()
 
@@ -187,15 +232,32 @@ def main() -> None:
         syms, interval = universe_symbols(), "1wk"
         print(f"{len(syms)} common-stock symbols", file=sys.stderr)
 
+    fmt = args.format if args.format != "auto" else ("parquet" if args.tier == "universe" else "csv")
+    ext = ".parquet" if fmt == "parquet" else ".csv.gz"
+
     print(f"downloading {len(syms)} symbols, interval={interval}, start={start}", file=sys.stderr)
     prices = download_prices(syms, start=start, interval=interval)
-    write_gz(prices, args.out / f"{args.tier}_prices_{interval}.csv.gz")
+    if args.tier == "universe" and not args.keep_volume and "volume" in prices.columns:
+        prices = prices.drop(columns=["volume"])
+    write_out(prices, args.out / f"{args.tier}_prices_{interval}{ext}")
 
     if not args.no_meta:
-        print("fetching market cap / shares metadata ...", file=sys.stderr)
-        meta = fetch_meta(syms)
+        meta = None
+        if args.tier == "universe" and args.meta_source in ("auto", "nasdaq"):
+            print("fetching market caps from the Nasdaq screener (one request) ...", file=sys.stderr)
+            try:
+                meta = nasdaq_screener_meta()
+                meta = meta[meta["symbol"].isin(set(syms))]
+            except Exception as e:
+                print(f"  screener failed ({e}); " + ("falling back to yfinance per symbol"
+                      if args.meta_source == "auto" else "no meta written"), file=sys.stderr)
+                if args.meta_source != "auto":
+                    return
+        if meta is None:
+            print(f"fetching market cap / shares for {len(syms)} symbols via yfinance ...", file=sys.stderr)
+            meta = fetch_meta(syms)
         meta.to_csv(args.out / f"{args.tier}_meta.csv", index=False)
-        print(f"wrote {args.out / f'{args.tier}_meta.csv'}", file=sys.stderr)
+        print(f"wrote {args.out / f'{args.tier}_meta.csv'} ({len(meta):,} rows)", file=sys.stderr)
 
 
 if __name__ == "__main__":

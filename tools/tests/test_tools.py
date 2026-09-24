@@ -13,6 +13,7 @@ import tenx_screener as ts  # noqa: E402
 import btc_cycle as bc  # noqa: E402
 import fetch_data as fd  # noqa: E402
 import watchlist as wl  # noqa: E402
+import common  # noqa: E402
 
 
 def test_required_cagr():
@@ -132,3 +133,28 @@ def test_yahoo_symbol_mapping():
     assert fd.yahoo_symbol("9880.HK") == "9880.HK"
     assert fd.yahoo_symbol("BTC-USD") == "BTC-USD"
     assert fd.yahoo_symbol("NVDA") == "NVDA"
+
+
+def test_parquet_round_trip(tmp_path):
+    prices = _synthetic_prices()
+    pq = common.write_prices(prices, tmp_path / "p.parquet")
+    back = common.load_prices(pq)
+    assert list(back.columns) == ["date", "symbol", "close"]
+    assert back["date"].iloc[0] == prices["date"].iloc[0] and str(back["symbol"].dtype) != "category"
+    assert np.allclose(back["close"].to_numpy(), prices["close"].to_numpy(), rtol=1e-6)
+    gz = common.write_prices(prices, tmp_path / "p.csv.gz")
+    assert len(common.load_prices(gz)) == len(prices)
+    # screener accepts parquet input
+    ev = ts.find_events(common.load_prices(pq), 730, 10)
+    assert set(ev["symbol"]) == {"AAA"}
+
+
+def test_parse_screener_rows():
+    rows = [{"symbol": "NVDA", "name": "NVIDIA", "lastsale": "$223.03", "marketCap": "5,420,000,000,000",
+             "sector": "Technology", "industry": "Semiconductors", "ipoyear": "1999"},
+            {"symbol": "BRK/B", "name": "Berkshire", "lastsale": "$500.00", "marketCap": "", "sector": ""},
+            {"symbol": "XYZ", "name": "x", "lastsale": "NA", "marketCap": "NA"}]
+    m = fd.parse_screener_rows(rows, asof="2026-09-24")
+    assert m.loc[0, "market_cap"] == 5.42e12 and abs(m.loc[0, "shares"] - 5.42e12 / 223.03) < 1
+    assert m.loc[1, "symbol"] == "BRK.B" and m.loc[1, "shares"] is None or np.isnan(m.loc[1, "shares"])
+    assert np.isnan(m.loc[2, "last_price"])

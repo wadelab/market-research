@@ -30,3 +30,8 @@ Newest entries at the bottom. Times are UTC.
   Verdict: no base-case 10x; best-evidenced names carry ~3-7 % subjective P(10x); regime (Fed hiking,
   10y 5.1 %, CAPE ~41) and the crypto-cycle calendar argue for building the list now and entering in
   tranches on weakness. Options maths says LEAPS only help on <=40-50 % IV names.
+- 15:50 Google Drive ruled out as the channel for the universe tier: the Drive connector returns file
+  contents inline (base64) and direct Drive downloads are blocked by the egress policy. Switched the
+  universe tier to Parquet (zstd; ~9 MB for 5,500 symbols x 626 weeks on synthetic data vs 20 MB gzip
+  CSV) so all tiers are committed to git. Market caps for the universe now come from the Nasdaq screener
+  in one request (fallback: per-symbol Yahoo). Added tools/common.py (Parquet/CSV I/O); 14 tests pass.
