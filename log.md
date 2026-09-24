@@ -41,3 +41,6 @@ Newest entries at the bottom. Times are UTC.
   crypto from Yahoo in small sequential batches with 2-minute back-off and resume, market caps from the
   Nasdaq screener + CoinGecko (one request each), all HTTP via requests + certifi. Split-adjustment
   check on NVDA/TSLA/SMCI. 18 tests pass.
+- 16:40 Stooq refuses the bulk zip to scripts (401). Script now looks for a browser-downloaded
+  d_us_txt.zip in ~/Downloads (and copies it to data/.cache/); core/watch fall back to slow Yahoo if
+  no zip is present; universe requires the zip.

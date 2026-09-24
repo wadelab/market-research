@@ -134,28 +134,51 @@ def universe_symbols() -> list[str]:
 
 
 # ----------------------------------------------------------------------------- Stooq bulk
-def ensure_stooq_zip(path: Path | None) -> Path:
-    if path and path.exists():
-        return path
+MANUAL_STOOQ_HELP = ("Stooq serves the bulk file only to browsers. Open https://stooq.com/db/h/ , click "
+                     "'d_us_txt.zip' in the Daily / U.S. / ASCII row (tick the robot check if asked), let it "
+                     "save to ~/Downloads, then re-run: the script finds it there automatically "
+                     "(or pass --stooq-zip <path>).")
+
+
+def find_stooq_zip(explicit: Path | None) -> Path | None:
+    """First existing candidate: --stooq-zip, the cache, ~/Downloads, the repo root. A file found
+    outside the cache is copied into data/.cache/ so later tiers reuse it."""
+    import shutil
+    candidates = [explicit, CACHE / "d_us_txt.zip", Path.home() / "Downloads" / "d_us_txt.zip",
+                  ROOT / "d_us_txt.zip"]
+    for c in candidates:
+        if c and c.exists() and c.stat().st_size > 10_000_000:
+            if c.resolve() != (CACHE / "d_us_txt.zip").resolve():
+                CACHE.mkdir(parents=True, exist_ok=True)
+                shutil.copy2(c, CACHE / "d_us_txt.zip")
+                print(f"copied {c} -> {CACHE / 'd_us_txt.zip'}", file=sys.stderr)
+                return CACHE / "d_us_txt.zip"
+            print(f"using {c}", file=sys.stderr)
+            return c
+    return None
+
+
+def ensure_stooq_zip(path: Path | None, required: bool = True) -> Path | None:
+    found = find_stooq_zip(path)
+    if found:
+        return found
     CACHE.mkdir(parents=True, exist_ok=True)
     target = CACHE / "d_us_txt.zip"
-    if target.exists() and target.stat().st_size > 10_000_000:
-        print(f"using cached {target}", file=sys.stderr)
-        return target
-    print(f"downloading {STOOQ_US_DAILY} (a few hundred MB, once) ...", file=sys.stderr)
+    print(f"trying {STOOQ_US_DAILY} (usually refused with 401; a browser download is then needed) ...",
+          file=sys.stderr)
     try:
         with http_get(STOOQ_US_DAILY, timeout=900, stream=True) as r, open(target, "wb") as f:
-            done = 0
             for chunk in r.iter_content(chunk_size=1 << 20):
-                f.write(chunk); done += len(chunk)
-                if done % (50 << 20) < (1 << 20):
-                    print(f"  {done / 1e6:.0f} MB", file=sys.stderr)
+                f.write(chunk)
+        print(f"saved {target} ({target.stat().st_size / 1e6:.0f} MB)", file=sys.stderr)
+        return target
     except Exception as e:
         target.unlink(missing_ok=True)
-        raise SystemExit(f"Stooq bulk download failed ({e}). Download 'd_us_txt.zip' from "
-                         f"https://stooq.com/db/h/ in a browser and re-run with --stooq-zip <path>.")
-    print(f"saved {target} ({target.stat().st_size / 1e6:.0f} MB)", file=sys.stderr)
-    return target
+        msg = f"Stooq bulk download failed ({str(e)[:60]}). {MANUAL_STOOQ_HELP}"
+        if required:
+            raise SystemExit(msg)
+        print(f"  {msg}\n  Falling back to Yahoo for this tier (slow, may throttle).", file=sys.stderr)
+        return None
 
 
 def parse_stooq_member(text: str, symbol: str, start: str) -> pd.DataFrame:
@@ -176,8 +199,10 @@ def stooq_prices(zip_path: Path, wanted: set[str] | None, start: str, stocks_onl
     frames = []
     with zipfile.ZipFile(zip_path) as z:
         members = [m for m in z.namelist() if m.endswith(".us.txt")]
+        print(f"  zip has {len(members)} US symbol files; e.g. {members[:2]}", file=sys.stderr)
         if stocks_only:
             members = [m for m in members if " stocks/" in m]
+            print(f"  {len(members)} in 'stocks' folders (ETFs excluded)", file=sys.stderr)
         for i, m in enumerate(members):
             sym = stooq_to_symbol(m)
             if sym is None or (wanted is not None and sym not in wanted):
@@ -429,8 +454,10 @@ def main() -> None:
     crypto = [s for s in syms if is_crypto(s)]
     frames = []
 
+    zp = None
     if args.tier == "universe" or args.equity_source == "stooq":
-        zp = ensure_stooq_zip(args.stooq_zip)
+        zp = ensure_stooq_zip(args.stooq_zip, required=(args.tier == "universe"))
+    if zp is not None:
         wanted = set(equities) if equities else None
         print(f"extracting {'all US stocks' if wanted is None else f'{len(wanted)} symbols'} from {zp.name} ...",
               file=sys.stderr)
@@ -444,6 +471,7 @@ def main() -> None:
             frames.append(download_yahoo(missing, start, out_path=None))
         frames.append(to_weekly(daily) if args.tier == "universe" else daily)
     elif equities:
+        print(f"downloading {len(equities)} equities from Yahoo (slowly, resumable) ...", file=sys.stderr)
         frames.append(download_yahoo(equities, start, out_path=out_path))
 
     if crypto:

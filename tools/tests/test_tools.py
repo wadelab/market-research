@@ -211,3 +211,18 @@ def test_parse_coingecko_rows():
 def test_rate_limit_detector():
     assert fd._is_rate_limit(Exception("Too Many Requests. Rate limited. Try after a while."))
     assert not fd._is_rate_limit(Exception("connection reset"))
+
+
+def test_find_stooq_zip_copies_into_cache(tmp_path, monkeypatch):
+    src = _stooq_zip(tmp_path)
+    # pad to pass the size sanity check
+    with open(src, "ab") as f:
+        f.write(b"\0" * 11_000_000)
+    monkeypatch.setattr(fd, "CACHE", tmp_path / "cache")
+    monkeypatch.setattr(fd, "ROOT", tmp_path / "nowhere")
+    monkeypatch.setattr(Path, "home", staticmethod(lambda: tmp_path / "nohome"))
+    found = fd.find_stooq_zip(src)
+    assert found == tmp_path / "cache" / "d_us_txt.zip" and found.exists()
+    assert fd.find_stooq_zip(None) == found          # second call uses the cache
+    monkeypatch.setattr(fd, "CACHE", tmp_path / "empty")
+    assert fd.find_stooq_zip(None) is None
