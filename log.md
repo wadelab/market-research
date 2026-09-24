@@ -25,3 +25,8 @@ Newest entries at the bottom. Times are UTC.
   raise CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION and/or widen network egress so page fetches work.
 - 14:58 Wade: always use uv for package management. Added pyproject.toml, uv.lock, CLAUDE.md
   (conventions); removed requirements.txt; all docs now use `uv run`.
+- 15:25 All eight screens in. Wrote notes/03-candidates.md (verdict + scored ranking), four deep dives
+  (IREN, UBTech, Centrus, Pendle), populated data/watchlist.csv (15 rows, 8 needing verification).
+  Verdict: no base-case 10x; best-evidenced names carry ~3-7 % subjective P(10x); regime (Fed hiking,
+  10y 5.1 %, CAPE ~41) and the crypto-cycle calendar argue for building the list now and entering in
+  tranches on weakness. Options maths says LEAPS only help on <=40-50 % IV names.

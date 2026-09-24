@@ -36,6 +36,21 @@ tools/                    Python analysis code (see tools/README.md)
 data/                     cached data (CSV/JSON); large files are gitignored
 ```
 
+## Where to start reading
+
+1. `notes/03-candidates.md` — the verdict and the ranked list (read this first).
+2. `notes/00-base-rates.md` — why the hit rate is low and what the evidence says winners had in common.
+3. `notes/01-market-snapshot.md` — the Sep 2026 regime (Fed hiking, 10y > 5 %, CAPE ~41, crypto 12 months past its top).
+4. `notes/deep-dives/` — IREN, UBTech, Centrus, Pendle.
+5. `notes/research-todo.md` — what is unverified and what to research next.
+
+## Status (2026-09-24)
+
+Eight research notes and four deep dives written in one session. The session's web-search quota ran
+out part-way through, so: space/defence was not researched; biotech and commodities candidates are
+from memory and unverified; roughly a third of the market caps elsewhere are marked [NOT FOUND].
+Nothing here is a base-case 10x. See `notes/03-candidates.md` §0.
+
 ## Environment note
 
 This research was started from a sandboxed cloud session whose network policy allows web
