@@ -11,6 +11,7 @@ command with `uv run`. Dependencies live in `pyproject.toml`; `uv.lock` is commi
 | `tenx_screener.py` | Find every >=10x-within-N-days episode in a price file; base rates by year and cap bucket | no (needs data) |
 | `btc_cycle.py` | Bitcoin halving-cycle table and current cycle position | no (needs data) |
 | `watchlist.py` | Print the watchlist with implied caps and progress | no (prices optional) |
+| `conditional_rates.py` | 3x/5x/10x rates conditioned on prior return and drawdown; buy-and-hold end values | no (needs data) |
 | `options_10x.py` | Black-Scholes table: underlying move needed for 10x on long-dated calls | no |
 
 ## Data workflow (sandbox cannot reach Yahoo Finance)

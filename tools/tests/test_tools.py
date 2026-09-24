@@ -278,3 +278,16 @@ def test_btc_cycle_peak_window():
     r2020 = tab[tab["halving"] == "2020-05-11"].iloc[0]
     assert r2020["peak_date"] == "2021-11-10" and r2020["peak"] == 300.0
     assert "2012-11-28" not in set(tab["halving"])          # data start after that halving: row skipped
+
+
+def test_conditional_rates_synthetic():
+    import conditional_rates as cr
+    prices = _synthetic_prices()
+    d = cr.per_symbol_table(prices, meta=None, window_days=730)
+    assert {"symbol", "year", "prior_ret", "dd3y", "fwd_max", "end_ratio", "dd_bucket", "prior_bucket"} <= set(d.columns)
+    assert d["year"].min() >= 2016 and d["year"].max() <= 2024      # needs a year before and two after
+    t = cr.summarise(d, "dd_bucket")
+    assert (t["p_max_10x"] <= 1).all() and (t["n"].sum() == len(d))
+    # AAA after its crash (row 1300 onwards: 12 -> 3) sits ~75% below its 3-year high in 2021-2022 starts
+    aaa = d[(d["symbol"] == "AAA") & (d["year"].isin([2021, 2022]))]
+    assert (aaa["dd3y"] < -0.6).all()

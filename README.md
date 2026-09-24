@@ -29,6 +29,8 @@ notes/00-base-rates.md    what the evidence says about how often 10x-in-2-years 
 notes/01-market-snapshot.md  state of markets at the research start date
 notes/02-framework.md     what past 10x-ers had in common; screening criteria
 notes/03-candidates.md    consolidated candidate list with scores
+notes/04-measured-base-rates.md  base rates measured from our own price data
+notes/05-recommendations.md      recommendations: sleeve design, timing trigger, tranche-1 names
 notes/themes/             one screen per theme (crypto, AI/semis, nuclear, quantum, biotech, ...)
 notes/deep-dives/         one file per asset that survives the screen
 notes/TEMPLATE-*.md       templates for theme screens and deep dives
@@ -38,7 +40,8 @@ data/                     price data (see data/README.md); all tiers committed
 
 ## Where to start reading
 
-1. `notes/03-candidates.md` — the verdict and the ranked list (read this first).
+1. `notes/05-recommendations.md` — what to do, with the evidence (read this first).
+1. `notes/03-candidates.md` — the verdict and the ranked list.
 2. `notes/00-base-rates.md` — the literature; `notes/04-measured-base-rates.md` — the measured rates from our own data.
 3. `notes/01-market-snapshot.md` — the Sep 2026 regime (Fed hiking, 10y > 5 %, CAPE ~41, crypto 12 months past its top).
 4. `notes/deep-dives/` — IREN, UBTech, Centrus, Pendle.

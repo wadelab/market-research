@@ -57,3 +57,10 @@ Newest entries at the bottom. Times are UTC.
 - 00:50 Ran the screens. Wrote notes/04-measured-base-rates.md; updated 03-candidates.md (§1a data-
   verified caps, §1b 24-month returns), 01-market-snapshot.md (measured BTC cycle numbers), the four
   deep dives, data/watchlist.csv (real entry prices/caps). Derived tables committed under data/derived/.
+- 01:40 Conditional analysis (tools/conditional_rates.py): P(touch 10x in 730 d) is 3.0 % for stocks
+  > 80 % below their 3-year high vs 0.13 % for those within 30 % of it (4.0 % for sub-$300M caps),
+  but the same cohort's buy-and-hold median end value is 0.56x with 47 % losing half. Regime effect
+  confirmed (2020 start 7.5 %, 2022 start 0.3 % for the deep-drawdown cohort).
+- 01:55 Wrote notes/05-recommendations.md: small rules-based sleeve; 30/40/30 tranches on a regime
+  trigger; mechanical sell rules; tranche-1 names Pendle, UBTech (after unit check), ABOS/RNAC/KYTX/LRMR
+  (after readout verification); IREN and miner conversions only on the trigger; Centrus as a 2-3x.
