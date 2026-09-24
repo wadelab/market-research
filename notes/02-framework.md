@@ -42,10 +42,10 @@ Scores are recorded in `03-candidates.md`. A score is a ranking device, not a pr
 Illustrative, not a recommendation. Assume each bet has P(10x) = 8 %, P(lose 80 %) = 60 %, else flat.
 
 ```
-$ python tools/tenx_math.py ev --p10x 0.08 --ploss 0.6 --loss 0.8
+$ uv run python tools/tenx_math.py ev --p10x 0.08 --ploss 0.6 --loss 0.8
 EV per unit staked: +0.24  (break-even P(10x) = 0.053 at P(loss)=0.6)
 Kelly fraction: 0.049 of sleeve (half-Kelly 0.025)
-$ python tools/tenx_math.py portfolio --n 10 --p 0.08
+$ uv run python tools/tenx_math.py portfolio --n 10 --p 0.08
 P(at least one 10x in 10 bets at p=0.08): 0.566
 ```
 

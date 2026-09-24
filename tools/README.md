@@ -1,6 +1,7 @@
 # tools/
 
-Python 3.11+. `pip install -r tools/requirements.txt`.
+Python 3.11+. Package management is **uv**: `uv sync --all-groups` once, then prefix every
+command with `uv run`. Dependencies live in `pyproject.toml`; `uv.lock` is committed.
 
 | Script | Purpose | Needs network? |
 |---|---|---|
@@ -13,17 +14,17 @@ Python 3.11+. `pip install -r tools/requirements.txt`.
 
 ## Data workflow (sandbox cannot reach Yahoo Finance)
 
-1. Locally: `python tools/fetch_data.py --tier core` and `--tier watch`. Both write a few MB of
+1. Locally: `uv run python tools/fetch_data.py --tier core` and `--tier watch`. Both write a few MB of
    gzip CSV to `data/` and are safe to commit.
-2. Optionally: `python tools/fetch_data.py --tier universe` (all US common stocks, weekly closes,
+2. Optionally: `uv run python tools/fetch_data.py --tier universe` (all US common stocks, weekly closes,
    12 years; tens of MB). Do not commit; put it in Google Drive and note the path in `data/README.md`.
 3. Push. The screens can then be re-run in the sandbox:
    ```
-   python tools/tenx_screener.py data/universe_prices_1wk.csv.gz --meta data/universe_meta.csv --out data/tenx_events.csv
-   python tools/btc_cycle.py data/core_prices_1d.csv.gz
-   python tools/watchlist.py --prices data/watch_prices_1d.csv.gz
+   uv run python tools/tenx_screener.py data/universe_prices_1wk.csv.gz --meta data/universe_meta.csv --out data/tenx_events.csv
+   uv run python tools/btc_cycle.py data/core_prices_1d.csv.gz
+   uv run python tools/watchlist.py --prices data/watch_prices_1d.csv.gz
    ```
 
 ## Tests
 
-`python -m pytest tools/tests -q` (synthetic data; no network).
+`uv run pytest -q` (synthetic data; no network).

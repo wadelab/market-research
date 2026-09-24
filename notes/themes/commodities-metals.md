@@ -10,8 +10,13 @@
 >   the reader can locate them.
 > - **Every price, market cap and date below is recalled from the model's training data
 >   (cut-off ~June 2026) and is marked `[from memory, verify]`**, per README ground rule 1.
->   Confidence is stated per item. Anything after ~June 2026, including all "Sep 2026" prices,
->   is **[NOT FOUND]**.
+>   Confidence is stated per item. Anything after ~June 2026 is **[NOT FOUND]** unless it carries
+>   a cross-reference tag (next bullet).
+> - **Exception:** figures tagged `[XREF snapshot n]`, `[XREF nuclear n]` or `[XREF crypto n]` are
+>   taken from sibling notes in this repo (`notes/01-market-snapshot.md`,
+>   `notes/themes/nuclear-energy-power.md`, `notes/themes/crypto.md`) whose authors did have search
+>   access; *n* is the source number in that note's Sources section, where the URL is recorded.
+>   They are search-snippet figures, not primary data, and were not re-checked here.
 > - Section 5 gives the exact verification queries to run when search budget is available.
 > - Treat this note as a *structured hypothesis list*, not as evidence. Nothing here should
 >   enter `notes/03-candidates.md` until the numbers are re-sourced.
@@ -23,16 +28,27 @@ Approximate path, all `[from memory, verify]`:
 
 | Metal | ~Sep 2024 | ~Sep 2025 | Peak / late reading (to Jun 2026) | Sep 2026 | Confidence |
 |---|---|---|---|---|---|
-| Gold (USD/oz) | ~2,600 | ~3,700-3,800 | >4,000 first on 8 Oct 2025; ~4,380 on 20 Oct 2025; >5,000 late Jan 2026, then a ~10% one-day drop on 30 Jan 2026 (Warsh Fed-chair nomination); H1 2026 range roughly 4,500-5,300 | [NOT FOUND] | medium for 2025, low for 2026 |
-| Silver (USD/oz) | ~31-32 | ~44-46 | >50 first on 9 Oct 2025; ~54.5 on 17 Oct 2025 (London lease-rate squeeze); >100 late Jan 2026; ~25-30% one-day drop on 30 Jan 2026; H1 2026 roughly 70-95 | [NOT FOUND] | medium for 2025, low for 2026 |
-| Gold/silver ratio | ~83-85 | ~83-88 | compressed to ~45-50 at the Jan 2026 peak; ~60-65 after the drop | [NOT FOUND] | medium/low |
-| Copper (LME USD/t) | ~9,500-9,900 | ~10,000-10,400 | record >11,000 late Oct 2025; ~12,000-13,000+ Dec 2025-Jan 2026 | [NOT FOUND] | medium/low |
+| Gold (USD/oz) | ~2,600 | ~3,700-3,800 | >4,000 first on 8 Oct 2025; ~4,380 on 20 Oct 2025; >5,000 late Jan 2026, then a ~10% one-day drop on 30 Jan 2026 (Warsh Fed-chair nomination); H1 2026 range roughly 4,500-5,300 | **$4,304** (23 Sep 2026) [XREF snapshot 32, 33]; ATH $5,589.38 intraday on 28 Jan 2026 [XREF snapshot 34]; ~23% below ATH (computed) | medium for 2025, low for 2026 |
+| Silver (USD/oz) | ~31-32 | ~44-46 | >50 first on 9 Oct 2025; ~54.5 on 17 Oct 2025 (London lease-rate squeeze); >100 late Jan 2026; ~25-30% one-day drop on 30 Jan 2026; H1 2026 roughly 70-95 | **$65.06** (23 Sep 2026) [XREF snapshot 32]. Exact 2026 peak [NOT FOUND]; the snapshot's secondary source says ">$75 in 2025, 50+ records" [XREF snapshot 34], which conflicts with my recollection (mid-$50s peak in 2025, >$100 only in Jan 2026): reconcile against LBMA fixes | medium for 2025, low for 2026 |
+| Gold/silver ratio | ~83-85 | ~83-88 | compressed to ~45-50 at the Jan 2026 peak; ~60-65 after the drop | **~66** (computed 4,304/65.06 from [XREF snapshot 32]) | medium/low |
+| Copper (LME USD/t) | ~9,500-9,900 | ~10,000-10,400 | record >11,000 late Oct 2025; ~12,000-13,000+ Dec 2025-Jan 2026 | COMEX fell below **$6.70/lb** on 23 Sep 2026, "retreating from record levels"; LME record **>$13,000/t** earlier in 2026; ~$6.30/lb vs ~$4.25/lb a year earlier at the time of the record [XREF snapshot 36-38]. LME cash on 24 Sep 2026 [NOT FOUND]; COMEX-LME spread [NOT FOUND] | medium/low |
 | Platinum (USD/oz) | ~950-1,000 | ~1,400-1,600 | ~1,400 by Jun 2025 (from ~950 in Apr 2025); ~1,700-2,000 Q4 2025; >2,000 Jan 2026 (spike then sharp reversal with silver) | [NOT FOUND] | medium for 2025, low for 2026 |
 | Lithium carbonate (China spot, CNY/t) | ~72,000-75,000 | ~73,000-80,000 | cycle low ~59,000-60,000 in Jun 2025; ~100,000+ Dec 2025; ~130,000-160,000 early 2026 | [NOT FOUND] | medium for 2025, low for 2026 |
 | NdPr oxide (China, CNY/kg) | ~400 | ~550-600 | US DoD floor for MP Materials set at USD 110/kg (Jul 2025); China spot rose through H2 2025 | [NOT FOUND] | low |
-| Uranium U3O8 spot (USD/lb) | ~80-82 | ~80-83 | trough ~64 (Mar 2025); ~80-95 Q4 2025 | [NOT FOUND]; see nuclear/energy theme note | medium/low |
+| Uranium U3O8 spot (USD/lb) | ~80-82 | ~80-83 | trough ~64 (Mar 2025); ~80-95 Q4 2025 | **$89.99/lb** spot (11 Sep 2026), +~20% y/y; term **$96-96.50/lb** (10 Sep 2026), a nominal record [XREF nuclear 46-48]; see `notes/themes/nuclear-energy-power.md` | medium/low |
 | Antimony (USD/t) | ~25,000-35,000 | ~55,000-60,000 | China banned exports to the US on 3 Dec 2024 | [NOT FOUND] | medium |
 | Tungsten APT (USD/mtu) | ~330-340 | ~500-600+ | Chinese export licensing from Feb 2025 | [NOT FOUND] | medium/low |
+
+**12- and 24-month comparison (Sep 2026 figures sourced via the snapshot; earlier bases from memory):**
+gold $4,304 vs ~$3,700-3,800 (Sep 2025) = roughly +14%, vs ~$2,600 (Sep 2024) = roughly +65%,
+but -23% from the 28 Jan 2026 ATH. Silver $65.06 vs ~$44-45 = roughly +45%, vs ~$31 = roughly
++110%, and well below its early-2026 peak (exact [NOT FOUND]). Copper set its record (>$13,000/t
+LME) in 2026, not 2025: the 2026 leg of the metals move was copper's and silver's, gold's was 2025.
+Uranium spot +~20% y/y with the term price at a nominal record. Macro backdrop from the snapshot:
+DXY 101.08 on 24 Sep 2026, +2.56% over 12 months [XREF snapshot 26]; August 2026 CPI +3.4% y/y;
+10-year real yield about +1.7% vs headline [XREF snapshot 11, 30]. So the 2026 gold correction
+occurred with a *firmer* dollar and positive real yields, i.e. two of the 2025 tailwinds reversed;
+whether central-bank buying [S1] held up in 2026 is the key unverified fact.
 
 **Drivers (2025-26), as recalled `[from memory, verify]`:**
 1. *Central-bank buying.* World Gold Council reported central-bank purchases of roughly 1,000 t/yr in 2022, 2023 and 2024 (the 2010-21 average was ~500 t/yr), with 2025 on a similar pace (Poland, China, Turkey, India, Kazakhstan among the largest reported buyers) [S1]. Confidence: medium.
@@ -40,7 +56,11 @@ Approximate path, all `[from memory, verify]`:
 3. *China.* PBoC reported monthly gold purchases through 2025; Shanghai premia; Chinese insurers were permitted to buy gold (Feb 2025 pilot). Silver: China solar (PV) demand and the Oct 2025 London squeeze. Confidence: medium.
 4. *Critical-minerals policy.* China's export controls on gallium/germanium/antimony (Dec 2024 ban to the US), on seven medium/heavy rare earths (4 Apr 2025), and the broad extraterritorial rare-earth regime (MOFCOM announcements of 9 Oct 2025, then suspended for one year in the 30 Oct 2025 Trump-Xi Busan deal) [S8, S9]. **The one-year suspension expires around Nov 2026, inside the 24-month window: a dated catalyst either way.** Confidence: medium-high on events, low on exact dates.
 5. *US government equity stakes in miners* (a new policy tool; all `[from memory, verify]`): MP Materials (DoD, 10 Jul 2025: USD 400 m preferred + warrants, ~15% stake, USD 110/kg NdPr floor, 10-year offtake for the "10X" magnet plant) [S5]; Lithium Americas (DOE, 30 Sep 2025: 5% of LAC + 5% of the Thacker Pass JV, in exchange for amending the USD 2.26 bn loan) [S6]; Trilogy Metals (10% + warrants, 6 Oct 2025, with the Ambler Road approval) [S7]; Vulcan Elements (Nov 2025, ~USD 620 m DoD/Commerce loans + equity); Korea Zinc US smelter JV with DoD (Dec 2025); USA Rare Earth (Commerce, Jan 2026, ~USD 1.6 bn package with an equity/warrant component - **size and terms UNVERIFIED**). Also: "Project Vault", a ~USD 10 bn US critical-minerals stockpile announced early Feb 2026 [UNVERIFIED]; US-Australia critical minerals framework (20 Oct 2025, USD 8.5 bn project pipeline incl. gallium at Alcoa Wagerup and Arafura Nolans) [S10]; Section 232 processed-critical-minerals investigation (Apr 2025) concluded without tariffs, in favour of negotiated agreements/price floors [UNVERIFIED].
-6. *Copper supply shocks.* Kamoa-Kakula seismic event (May 2025), El Teniente fatal accident (Jul 2025), Grasberg mud rush and force majeure (8 Sep 2025; phased restart guided for H1 2026), QB2 downgrades; plus the 50% Section 232 tariff on semi-finished copper effective 1 Aug 2025 with refined cathode exempt (announced 30 Jul 2025; COMEX fell ~20% in a day) [S11, S12]. Confidence: medium-high.
+6. *Copper supply shocks.* Kamoa-Kakula seismic event (May 2025), El Teniente fatal accident (Jul 2025), Grasberg mud rush and force majeure (8 Sep 2025; phased restart guided for H1 2026), QB2 downgrades; plus the 50% Section 232 tariff on semi-finished copper effective 1 Aug 2025 with refined cathode exempt (announced 30 Jul 2025; COMEX fell ~20% in a day) [S11, S12]. Confidence: medium-high on
+   the 2025 events. **Reconcile:** the snapshot records the Section 232 copper duty at *25%* as of
+   Sep 2026 [XREF snapshot 98], not 50%; the rate or scope may have been revised. The snapshot also
+   records the Supreme Court striking down the IEEPA tariffs on 20 Feb 2026 and their replacement by
+   Section 122 then Section 301 duties [XREF snapshot 94-97], which does not touch Section 232.
 7. *Lithium.* A ~90% price bust from the Nov 2022 peak (~CNY 600,000/t) to Jun 2025 (~CNY 60,000/t); then supply discipline (CATL Jianxiawo lepidolite mine suspended Aug 2025 on licence expiry; Zimbabwe/Africa curtailments; Australian care-and-maintenance at Finniss, Bald Hill, Kathleen Valley slow-down) and a price recovery into early 2026. Confidence: medium.
 8. *PGMs.* WPIC reported a third consecutive platinum deficit for 2025 (~0.85 Moz), above-ground stocks drawing down, and Chinese jewellery/bar demand; palladium supported by the same. Confidence: medium.
 
@@ -54,6 +74,12 @@ Approximate path, all `[from memory, verify]`:
 - **Rare-earth "national champions" price a policy premium.** MP at ~$100 (Oct 2025) was ~$16-18 bn for ~USD 200-300 m of annual revenue; USA Rare Earth at ~$40 was a multi-billion pre-revenue company; Lynas ~A$15-18 bn. A 10x from there would require $150 bn+ for MP. Reject on implied market cap; the policy optionality has been paid for.
 - **Consensus price forecasts** (as recalled; all `[from memory, verify]`): during Q4 2025 banks moved gold targets to ~$4,900-5,000 for end-2026 (Goldman Sachs ~$4,900; JPMorgan ~$5,055 for Q4 2026) and, after the Jan 2026 spike, several to $5,500-6,000+; silver consensus was $50-60 before the spike and was being revised toward $75-100 in early 2026; copper consensus for 2026 was above $11,000/t (Goldman, Citi); lithium consensus was for a slow recovery with surplus persisting through 2026-27; platinum consensus was for continued deficits but with price already far above marginal cost. Confidence: low-medium; treat as [NOT FOUND] until re-sourced.
 - **The gold/silver ratio** at ~60-65 (post-Jan 2026) vs the 2020-25 range of ~65-105: the "cheap silver" argument that worked from 85-90 is much weaker from here. Confidence: low.
+- **Where the cycle stands (sourced):** gold is ~23% below its 28 Jan 2026 ATH and silver at
+  $65.06 is far below its early-2026 peak [XREF snapshot 32-35]; the gold/silver ratio is back to
+  ~66 from ~45-50 at the spike (memory); copper is just off a 2026 record [XREF snapshot 36-38];
+  uranium term is at a nominal record [XREF nuclear 46-48]. Eight months into a precious-metals
+  correction is a better starting point for silver/PGM-linked 10x candidates than the Jan 2026
+  peak was, and a worse one for copper.
 - **Lithium is the laggard.** Even after roughly doubling from the trough, Chinese carbonate at ~CNY 130,000-160,000 (early 2026) is ~25% of the 2022 peak, and lithium equities remain 60-80% below their 2022 highs (Albemarle ~$50 Apr 2025 low, ~$140-170 by Jan 2026 vs ~$330 peak in Nov 2022; Pilbara, Liontown, Sigma similar). This is the only sub-sector in this theme where the market still prices a bust rather than a boom.
 - **PGM juniors and second-tier tungsten/antimony developers** also lag: the 2025-26 moves went to producers (Sibanye, Impala, Valterra, Almonty, USAC), not to permit-stage developers.
 
@@ -88,13 +114,15 @@ Price/market-cap columns: `[from memory, verify]`, approximate, last reading H1 
 
 **Silver-specific arithmetic (what silver price does a 10x need?)** For a producer at constant EV/EBITDA and constant output, margin per oz must rise 10x. With AISC A and current silver S0: S(10x) = A + 10(S0 - A).
 
-| Producer type (AISC, `[from memory, verify]`) | From S0 = $31 (Sep 2024) | From S0 = $45 (Sep 2025) | From S0 = $80 (H1 2026 est.) |
+| Producer type (AISC, `[from memory, verify]`) | From S0 = $31 (Sep 2024, memory) | From S0 = $45 (Sep 2025, memory) | **From S0 = $65.06 (23 Sep 2026 [XREF snapshot 32])** |
 |---|---|---|---|
-| Primary silver, AISC ~$20-22 (First Majestic, Endeavour) | ~$130 | ~$270 | ~$620 |
-| Co-product, AISC ~$14-16 (Hecla, Coeur) | ~$175 | ~$315 | ~$665 |
-| High-cost/restart, AISC ~$28-32 (Guanajuato, Santacruz, Avino older mines) | ~$40-60 (this is why they were the 5-7x names in 2025) | ~$180 | ~$560 |
+| Primary silver, AISC ~$20-22 (First Majestic, Endeavour) | ~$130 | ~$270 | **~$470** |
+| Co-product, AISC ~$14-16 (Hecla, Coeur) | ~$175 | ~$315 | **~$515** |
+| High-cost/restart, AISC ~$28-32 (Guanajuato, Santacruz, Avino older mines) | ~$40-60 (this is why they were the 5-7x names in 2025) | ~$180 | **~$380** |
 
-Reading: the "10x in margin" that produced the 2025-26 micro-cap silver moves *has already happened* for anyone with AISC around $25-30. A second 10x in margin requires silver above ~$250, which no consensus forecast contemplates. What remains is **re-rating leverage in developers/explorers**: a project with NPV5 ~$500 m at $45 silver trading at 0.3x NAV (~$150 m cap) can re-rate to 1.0x NAV on a doubled silver price (NPV ~$1.3-1.5 bn) = ~9-10x. That mechanism requires (i) silver to roughly double *from the starting date* and (ii) the market to pay full NAV, which historically happens only at takeover. It is the only credible silver 10x path from Sep 2026, and it is a 5-10% probability event, not a base case.
+Reading: the "10x in margin" that produced the 2025-26 micro-cap silver moves *has already happened* for anyone with AISC around $25-30. A second 10x in margin from today's $65 requires silver of roughly $380-520, which no consensus
+forecast contemplates (a re-run of the Jan 2026 spike to ~$100+ would be ~2.5x in margin for a
+$20-AISC producer, i.e. a 2-3x, not a 10x). What remains is **re-rating leverage in developers/explorers**: a project with NPV5 ~$500 m at $65 silver trading at 0.3x NAV (~$150 m cap) can re-rate to 1.0x NAV on a doubled silver price (~$130; NPV ~$1.3-1.5 bn) = ~9-10x. That mechanism requires (i) silver to roughly double *from the starting date* (i.e. to retake and exceed the Jan 2026 peak) and (ii) the market to pay full NAV, which historically happens only at takeover. It is the only credible silver 10x path from Sep 2026, and it is a 5-10% probability event, not a base case.
 
 **Silver fundamentals to verify [S2]:** Silver Institute World Silver Survey 2025 (Apr 2025) reported, as recalled `[from memory, verify]`: 2024 total demand ~1.16 bn oz; industrial ~680 Moz (record), of which PV ~197 Moz; market deficit ~149 Moz in 2024 and a fifth consecutive deficit forecast for 2025 (~118 Moz); above-ground stocks ~15 months of demand. Bear point: PV silver intensity is falling ~10-15%/yr (copper metallisation, thinner busbars), so PV demand may have peaked in 2024-25.
 
@@ -171,4 +199,7 @@ Everything. Priority verification queries (run when search budget exists; each a
 - [S12] Presidential Proclamation on Section 232 copper tariffs (30 Jul 2025) - 50% on semi-finished products, cathode exempt. [URL not retrieved]
 - [S13] Company annual reports / MD&A for AISC: First Majestic, Hecla, Coeur, Endeavour Silver (FY2025). [URL not retrieved]
 - [S14] Exchange price histories (TMX, ASX, LSE, Nasdaq) for every equity named in Sections 1-4. [URL not retrieved]
+- [X1] `notes/01-market-snapshot.md` (this repo, 2026-09-24), Sources 3, 11, 26, 30, 32-38, 42-48, 69-73, 94-98 - gold/silver/copper spot 23 Sep 2026, gold ATH, DXY, CPI, tariffs, BTC path. URLs recorded there; search-snippet figures.
+- [X2] `notes/themes/nuclear-energy-power.md` (this repo, 2026-09-24), Sources 29, 46-49 - U3O8 spot and term prices Sep 2026, Kazatomprom cuts, Cameco 1-year return.
+- [X3] `notes/themes/crypto.md` (this repo, 2026-09-24), Sources 1, 14-19, 61-64 - BTC prices, Strategy mNAV, DAT bitcoin sales, prediction-market volumes.
 - [S15] Analysis tooling used for the leverage note: `tools/options_10x.py` (this repo). Not a source for any market number.

@@ -2,10 +2,10 @@
 """
 Arithmetic that every 10x candidate has to survive. Standard library only.
 
-    python tools/tenx_math.py implied --mcap 2.5e9            # what 10x means in market cap
-    python tools/tenx_math.py cagr --multiple 10 --years 2     # required annualised return
-    python tools/tenx_math.py ev --p10x 0.08 --ploss 0.6 --loss 0.8   # expected value + Kelly
-    python tools/tenx_math.py portfolio --n 10 --p 0.08        # P(at least one 10x in n bets)
+    uv run python tools/tenx_math.py implied --mcap 2.5e9            # what 10x means in market cap
+    uv run python tools/tenx_math.py cagr --multiple 10 --years 2     # required annualised return
+    uv run python tools/tenx_math.py ev --p10x 0.08 --ploss 0.6 --loss 0.8   # expected value + Kelly
+    uv run python tools/tenx_math.py portfolio --n 10 --p 0.08        # P(at least one 10x in n bets)
 
 Definitions
 -----------

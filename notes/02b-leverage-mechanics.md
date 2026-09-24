@@ -9,7 +9,10 @@
 > is recalled from training data (cut-off ~Jun 2026), marked `[from memory, verify]`, and has no
 > URL because the session's web-search budget was exhausted before this note was started. The
 > academic references in the Sources section are given bibliographically (journal, volume, pages)
-> for checking; none was fetched here.
+> for checking; none was fetched here. Figures tagged `[XREF snapshot n]` / `[XREF crypto n]` come
+> from sibling notes in this repo written by agents that did have search access
+> (`notes/01-market-snapshot.md`, `notes/themes/crypto.md`); *n* is the source number in that
+> note, where the URL is recorded. They are search-snippet figures and were not re-checked here.
 
 ## 0. The one-line answer
 
@@ -36,6 +39,9 @@ hitting 10x the premium at any daily close before expiry, at +10% drift.
 **Where current IVs sit.** Not retrieved this session. Typical ranges recalled for 2025-H1 2026,
 `[from memory, verify]` before use: NVDA 40-55%; TSLA 55-75%; IBIT/BTC 45-65%; COIN 70-100%;
 MSTR 80-120% (it fell as the mNAV premium compressed in late 2025). The table brackets these.
+Sourced context for the date of writing: VIX 15.18 at the 23 Sep 2026 close [XREF snapshot 3];
+NVDA $223.03, market cap ~$5.4 T (22-23 Sep 2026) [XREF snapshot 57-61]; BTC $85,686 (23 Sep 2026)
+[XREF snapshot 42]. Single-name 12-month implied vols on that date: [NOT FOUND].
 
 ### 1.2 Main table (from `tools/options_10x.py`)
 
@@ -190,7 +196,7 @@ two-year hold (script: same cost assumptions).
 - **TSLL (2x TSLA):** Dec 2024 peak to Mar-Apr 2025 trough about -80% vs TSLA about -50%; Tesla's later recovery left TSLL well below its own peak. 2026 [NOT FOUND].
 - **MSTU (T-Rex 2x MSTR, launched Sep 2024) / MSTX (Defiance, launched Aug 2024 at 1.75x, later 2x):** MSTR fell from ~$543 (21 Nov 2024) to roughly $120-160 by Dec 2025-Feb 2026 (~-75%); the 2x products lost ~95% peak-to-trough and, in Nov 2024, ran out of swap capacity at prime brokers and used call options to get exposure, which increased tracking error `[from memory, verify]`. Reverse splits [NOT FOUND].
 - **CONL (2x COIN):** ~-80% peak-to-trough Dec 2024 to Apr 2025, then a large recovery into Jul 2025 as COIN joined the S&P 500 `[from memory, verify]`.
-- **BITX (2x bitcoin futures, Volatility Shares):** over Sep 2024-Sep 2025 (BTC roughly +85%) BITX approximately +100-130% `[from memory, verify; NOT FOUND precisely]`; after the 10 Oct 2025 crash and the Feb 2026 drawdown to ~$60-65k `[from memory, verify]`, it was far below 2x BTC from launch. Futures roll costs add ~5-15%/yr drag in contango on top of the 2x fee/financing.
+- **BITX (2x bitcoin futures, Volatility Shares):** BTC's sourced path over the last 12 months is ~$112.1k (23 Sep 2025, computed in the crypto note [XREF crypto 1]) -> ATH $126,198 (6 Oct 2025) -> ~$58k low (Jun 2026, -54% from ATH) -> $85,686 (23 Sep 2026), i.e. **-23.6% y/y** [XREF snapshot 42-48]. Applying the Section 2.1 formula to that year (gross 0.764, realised vol assumed 60%, 4.5% financing + 1% fee) gives a 2x product at **~0.39x, i.e. about -61%**, vs -24% for spot; at 80% realised vol ~0.29x (-71%). These are model numbers; BITX's actual 12-month return is [NOT FOUND]. Futures roll (contango) adds a further ~5-15%/yr `[from memory, verify]`.
 - **Silver 2x (AGQ) and gold-miner 2x (NUGT/JNUG):** 2025 [NOT FOUND]; Jan 2026 silver spike and 30 Jan 2026 crash will have produced extreme path-dependence; a verification target.
 
 ### 2.6 When leveraged ETFs help and when they destroy
@@ -240,9 +246,15 @@ maintenance call is met.
 
 ### 3.3 Funding
 Perp funding is paid every 8 h (most venues), typically +0.01%/8h at baseline (=11%/yr) and
-0.03-0.10%/8h (33-110%/yr) in crowded longs `[from memory, verify]`; the 10 Oct 2025 liquidation
-cascade (reported as the largest ever, ~$19 bn `[from memory, verify]`) is the reminder that
-funding spikes coincide with the moments leverage is most dangerous.
+0.03-0.10%/8h (33-110%/yr) in crowded longs `[from memory, verify]`. The cascades of the last
+12 months, as recorded in the snapshot: 10 Oct 2025, ~$19 bn liquidated in a day, the largest on
+record [XREF snapshot 69, 70]; January 2026, $1.7 bn [XREF snapshot 74]; "Black Sunday II",
+1 Feb 2026, $2.2 bn, with gold and silver crashing the same day [XREF snapshot 73]; 4-6 Jun 2026,
+>$3 bn as BTC went from ~$67k to $59.1k in 48 h [XREF snapshot 47]; 20 Aug 2026, $2.74 bn of
+*shorts* liquidated, the largest short-side wipe-out ever [XREF snapshot 72]. The June move is a
+-12% two-day drop: by Section 3.1 it liquidates every isolated long at 8x or more, and BTC's
+2026 drawdown of -54% from ATH [XREF snapshot 46] liquidates every long at 2x or more that was
+opened near the top.
 
 | funding / 8h | annualised | cost on 3x notional (% of equity/yr) | cost on 5x |
 |---|---|---|---|
@@ -254,7 +266,7 @@ funding spikes coincide with the moments leverage is most dangerous.
 At 3x with average funding of 0.03%/8h, the position must return 99% of equity per year just to
 pay funding. A "10x" via 3x perps therefore needs the underlying up ~4x within a few months, and
 a path with no -33% pullback. Historically BTC has had a >30% drawdown in every calendar year
-since 2011 `[from memory, verify]`.
+since 2011 `[from memory, verify]`; 2026's was -54% peak-to-trough [XREF snapshot 46].
 
 ## 4. Bitcoin-treasury companies as embedded leverage
 
@@ -266,22 +278,28 @@ premium (mNAV > 1): while it lasts, at-the-market equity issuance buys more BTC 
 the share represents, so BTC-per-share rises ("BTC yield"), which justifies the premium - a
 reflexive loop that works in both directions.
 
-History `[from memory, verify]`: mNAV peaked around 3.0-3.4x in Nov 2024 (MSTR ~$543 on 21 Nov
-2024, BTC ~$97k); ~1.5-2.0x through mid-2025; ~1.0-1.2x by Nov-Dec 2025 as BTC fell from the
-6 Oct 2025 high (~$126k) to ~$85-90k; around or below 1.0x in Dec 2025-Feb 2026 as BTC fell
-toward $60-65k, i.e. below Strategy's average cost (~$74-76k). Strategy responded with a USD
-cash reserve (~$1.4 bn in Dec 2025, raised to ~$2.25 bn) to cover preferred dividends, and the
-"sell BTC" question moved from hypothetical to explicit. MSCI's consultation on excluding DATs
-with >50% of assets in crypto from its indices concluded in Jan 2026 without an exclusion
-[UNVERIFIED]. Smaller DATs (Metaplanet, Semler which merged into Strive in 2025, many 2025 SPAC
-"ETH/SOL treasuries") went to mNAV < 1, where issuance is dilutive and the loop reverses.
-Sep 2026 mNAV: [NOT FOUND].
+History. Sourced via the crypto note: Strategy's mNAV fell from ~3.4x (Nov 2024) to
+~0.82-0.86x (Apr-Jun 2026) and **0.68x on 3 Aug 2026** [XREF crypto 14, 15]; Trefis (26 Jun 2026)
+called it a "40% bitcoin discount" [XREF crypto 15]; Strategy, Satsuma, Smarter Web Company,
+Sequans, Nakamoto and Empery Digital have *sold* bitcoin to repay debt, fund operations or buy
+back stock (CoinDesk, 24 Jul 2026) [XREF crypto 17]; one in three treasury companies trades below
+NAV [XREF crypto 18]. MSTR share price and BTC holdings in Sep 2026: [NOT FOUND] (also not found
+by the crypto agent). Intermediate steps `[from memory, verify]`: MSTR ~$543 on 21 Nov 2024 at
+the premium peak; ~1.5-2.0x mNAV through mid-2025; ~1.0-1.2x by Nov-Dec 2025 as BTC fell from
+the 6 Oct 2025 high; Strategy added a USD cash reserve (~$1.4 bn Dec 2025, later ~$2.25 bn) to
+cover preferred dividends; MSCI's Jan 2026 consultation on excluding DATs from its indices ended
+without an exclusion [UNVERIFIED]; Metaplanet, Semler (merged into Strive, 2025) and most 2025
+"ETH/SOL treasury" SPACs went to mNAV < 1, where issuance is dilutive and the loop reverses.
 
-What a MSTR 10x needs: with leverage ~1.25x at mNAV 1, BTC must rise ~4x *and* the premium must
-return to ~2.5x, or BTC ~8x at constant mNAV. Neither is a base case. The preferreds (8-10%
+What a MSTR 10x needs from 0.68x mNAV: the equity is worth (mNAV) x (BTC NAV), so a 10x needs
+the product to rise 10x: BTC ~4x (to ~$340k) *with* mNAV back to ~1.7x, or BTC ~6.8x at parity
+(ignoring the ~1.2-1.3x balance-sheet leverage, which helps on the way up and forces BTC sales on
+the way down [XREF crypto 17]). The discount's own mean reversion to 1.0x is a +47%, not a 10x.
+Neither leg is a base case. The preferreds (8-10%
 yields at issue `[from memory, verify]`) are the interesting instruments but are not 10x
 candidates by construction. **Verdict: DAT equity is levered beta plus a sentiment premium that
-2025-26 showed can go to zero; it does not create 10x optionality that BTC itself lacks.**
+2025-26 showed can invert into a discount (0.68x); it does not create 10x optionality that BTC
+itself lacks.**
 
 ## 5. Prediction markets (Polymarket / Kalshi) as a defined-odds 10x
 
@@ -314,6 +332,13 @@ fees on some categories after the 2025-26 US relaunch [NOT FOUND]. Long-dated co
 up capital for months at 0% (Polymarket) or with interest on balances (Kalshi introduced
 interest on cash in 2025 [UNVERIFIED]).
 
+**Scale (sourced via the crypto note).** Sector volume ~$25.7 bn in Mar 2026, of which Kalshi
+~$13 bn and Polymarket ~$10 bn [XREF crypto 62]; Polymarket's POLY token was announced for Q1 2026
+alongside its US relaunch but was not live as of Mar 2026, and its Sep 2026 status is [NOT FOUND]
+[XREF crypto 63]; Fortune (20 Apr 2026) covered Coinbase's and Robinhood's entry into the sector
+(title only seen) [XREF crypto 64]; the crypto note also records a Jun 2026 report of prediction
+protocols under investigation, sourced to a secondary blog [XREF crypto 61] - unverified.
+
 **Regulatory status 2026 `[from memory, verify]`.** Kalshi: CFTC-registered designated contract
 market; won the 2024 litigation allowing election contracts; through 2025 fought state
 gaming regulators over sports event contracts (cease-and-desist letters from Nevada, New Jersey,
@@ -341,7 +366,7 @@ of two or more. They cannot absorb size, and the average 10-cent contract is ove
 | 2x daily ETF | 3.5x (40% vol) to 5.4x (100% vol) | n/a (continuous) | -50% underlying = -80 to -88% | 5-6% + drag 15-63% at flat | Barely, then needs 4x to recover | Trending, <=50% vol, <=12 m |
 | 3x daily ETF | 2.6x (40% vol) to 6x (100% vol) | n/a | -50% underlying = -93%+ | 10-11% + drag 38-95% at flat | No (economically) | Trending, <=40% vol, <=12 m |
 | 3x perp | ~4x within months, no -33% pullback | n/a | Liquidated ~50% of the time in 12 m at 60% vol (38% even with +50% drift) | 33-330% funding | No | Days-to-weeks only |
-| DAT equity (MSTR) | BTC ~4x + premium back to 2.5x | very low | Premium collapsed 3.4x -> ~1.0x in 15 months | financing via prefs 8-10% | Partly (no liquidation, but dilution/BTC sales) | Not a 10x instrument |
+| DAT equity (MSTR) | BTC ~4x + mNAV 0.68x -> 1.7x | very low | Premium went 3.4x (Nov 2024) -> 0.68x (3 Aug 2026) [XREF crypto 14]; forced BTC sales [XREF crypto 17] | financing via prefs 8-10% | Partly (no liquidation, but dilution/BTC sales) | Not a 10x instrument; discount mean-reversion is ~1.5x at best |
 | Prediction-market 10c contract | n/a (event) | ~8-10% (longshot bias) | ~90-92% total loss | none (capital lock-up) | n/a | Small size, source-based edge on resolution |
 
 **Honest assessment.** The best *risk-adjusted* route to a 10x is a 12-month, delta 0.20-0.30
@@ -381,4 +406,6 @@ in Sections 2.5, 3.3, 4 and 5 are `[from memory, verify]` and have no source her
 - [R7] Page, L., & Clemen, R. T. (2013). Do prediction markets produce well-calibrated probability forecasts? *Economic Journal*, 123(568), 491-513. (Calibration of prediction markets, Section 5.)
 - [R8] Kelly, J. L. (1956). A new interpretation of information rate. *Bell System Technical Journal*, 35(4), 917-926. (Sizing, Section 6.)
 - [R9] `tools/options_10x.py` in this repository (Black-Scholes strike-from-delta, 10x thresholds, lognormal probabilities, 20,000-path Monte Carlo of 10x touch, LETF drag, reflection-principle liquidation probabilities). Run date 2026-09-24. Assumptions: r = 4%, maintenance margin 0.5%, LETF financing 4.5% + 1% fee.
+- [X1] `notes/01-market-snapshot.md` (this repo, 2026-09-24), Sources 3, 42-48, 57-61, 69-74 - VIX, BTC path and 2026 low, NVDA price/cap, liquidation cascades. URLs recorded there; search-snippet figures.
+- [X2] `notes/themes/crypto.md` (this repo, 2026-09-24), Sources 1, 14-19, 61-64 - BTC one-year change, Strategy mNAV history, DAT bitcoin sales, prediction-market volumes and POLY status.
 - [R10] Implied-vol levels for NVDA/TSLA/COIN/MSTR/IBIT: [NOT FOUND] this session; the ranges quoted in Section 1.1 are `[from memory, verify]` (check any options-analytics screen for 12-month ATM IV on the date of use).

@@ -3,8 +3,8 @@
 Watchlist tracker. Reads data/watchlist.csv, prints each candidate's implied 10x market cap and,
 if a price file is available, progress since entry.
 
-    python tools/watchlist.py                                  # table from the CSV alone
-    python tools/watchlist.py --prices data/watch_prices_1d.csv.gz   # add latest price & progress
+    uv run python tools/watchlist.py                                  # table from the CSV alone
+    uv run python tools/watchlist.py --prices data/watch_prices_1d.csv.gz   # add latest price & progress
 
 watchlist.csv columns:
   symbol, name, theme, entry_date, entry_price, entry_mcap, target_multiple, thesis, catalysts,

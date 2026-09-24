@@ -3,7 +3,7 @@
 Bitcoin halving-cycle table: for each halving, the pre-halving low, post-halving peak, the
 subsequent bear-market low, and the timing, plus where 'today' sits in the current cycle.
 
-    python tools/btc_cycle.py data/core_prices_1d.csv.gz [--asof 2026-09-24]
+    uv run python tools/btc_cycle.py data/core_prices_1d.csv.gz [--asof 2026-09-24]
 
 Input: long-format file with a BTC-USD symbol (as written by fetch_data.py --tier core).
 Halving dates are hard-coded (block-height events): 2012-11-28, 2016-07-09, 2020-05-11, 2024-04-20.

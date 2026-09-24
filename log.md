@@ -23,3 +23,5 @@ Newest entries at the bottom. Times are UTC.
   partly, and space/defence not at all (marked [NOT FOUND] in the file with a to-do list);
   (b) the remaining agents can only finish from material already gathered. Remedy for next session:
   raise CLAUDE_CODE_MAX_WEB_SEARCHES_PER_SESSION and/or widen network egress so page fetches work.
+- 14:58 Wade: always use uv for package management. Added pyproject.toml, uv.lock, CLAUDE.md
+  (conventions); removed requirements.txt; all docs now use `uv run`.

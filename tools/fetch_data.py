@@ -4,10 +4,10 @@ Download the price data the analysis scripts need, in three size tiers.
 
 Run this LOCALLY (the research sandbox cannot reach Yahoo Finance):
 
-    pip install yfinance pandas
-    python tools/fetch_data.py --tier core       # ~20 symbols, daily, 12y   -> commit to git (small)
-    python tools/fetch_data.py --tier watch      # watchlist + theme names   -> commit to git (small)
-    python tools/fetch_data.py --tier universe   # all US common stocks, weekly, 12y -> Google Drive (large)
+    uv sync
+    uv run python tools/fetch_data.py --tier core       # ~20 symbols, daily, 12y   -> commit to git (small)
+    uv run python tools/fetch_data.py --tier watch      # watchlist + theme names   -> commit to git (small)
+    uv run python tools/fetch_data.py --tier universe   # all US common stocks, weekly, 12y -> Google Drive (large)
 
 Outputs (gzip CSV, long format: date,symbol,close[,volume]) go to data/. The core and watch tiers
 are a few MB at most and are safe to commit; the universe tier can be 30-60 MB and is gitignored.

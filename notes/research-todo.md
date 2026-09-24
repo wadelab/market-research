@@ -15,8 +15,8 @@ Ordered by expected value of the information. Each needs web search (budget exha
    "full-size humanoid" unit (16,123 units vs RMB 590M revenue implies ~RMB 37k/unit).
 
 ## Data to load (run locally, see tools/README.md)
-- `python tools/fetch_data.py --tier core` and `--tier watch` -> commit.
-- `python tools/fetch_data.py --tier universe` -> Google Drive. Then run `tenx_screener.py` to
+- `uv run python tools/fetch_data.py --tier core` and `--tier watch` -> commit.
+- `uv run python tools/fetch_data.py --tier universe` -> Google Drive. Then run `tenx_screener.py` to
   replace the base-rate hypotheses in `02-framework.md` with measured rates.
 
 ## Nice to have

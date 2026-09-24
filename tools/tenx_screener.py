@@ -3,7 +3,7 @@
 Find every instance of a >= K-fold rise within a rolling window in a long-format price file,
 and estimate base rates by starting market-cap bucket.
 
-    python tools/tenx_screener.py data/universe_prices_1wk.csv.gz --window-days 730 --multiple 10 \
+    uv run python tools/tenx_screener.py data/universe_prices_1wk.csv.gz --window-days 730 --multiple 10 \
         --meta data/universe_meta.csv --out data/tenx_events.csv
 
 Input columns: date, symbol, close (long format, as written by fetch_data.py).
