@@ -27,7 +27,7 @@ WATCH_SYMBOLS = [
     # biotech (from notes/themes/biotech.md; all pending verification)
     "XBI", "NTLA", "BEAM", "CRSP", "RXRX", "SDGR", "CMPS", "MNMD", "ABOS", "RNAC", "KYTX", "LRMR",
     # commodities equities
-    "MP", "USAR", "AG", "HL", "CDE", "EXK", "SILV", "VZLA", "ALB", "SBSW", "IMPUY",
+    "MP", "USAR", "AG", "HL", "CDE", "EXK", "SILV", "VZLA", "ALB", "SBSW", "IMPUY", "GMET.L",
     # crypto
     "BTC-USD", "ETH-USD", "SOL-USD", "HYPE-USD", "LINK-USD", "AAVE-USD", "SUI-USD", "APT-USD",
     "ENA-USD", "PENDLE-USD", "DOGE-USD", "XRP-USD", "BNB-USD",

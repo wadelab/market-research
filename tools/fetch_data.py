@@ -103,12 +103,19 @@ def yahoo_symbol(sym: str) -> str:
     return sym
 
 
+STOOQ_COUNTRY_SUFFIX = {"us": "", "uk": ".L"}   # Stooq country code -> Yahoo-style exchange suffix
+_STOOQ_MEMBER = re.compile(r"^(.+)\.(us|uk)\.txt$")
+
+
 def stooq_to_symbol(member: str) -> str | None:
-    """'data/daily/us/nasdaq stocks/1/brk-b.us.txt' -> 'BRK.B'; non-US members -> None."""
+    """'data/daily/us/nasdaq stocks/1/brk-b.us.txt' -> 'BRK.B'; 'data/hourly/uk/lse stocks/1/bp.uk.txt'
+    -> 'BP.L'; members from other countries -> None."""
     name = member.rsplit("/", 1)[-1]
-    if not name.endswith(".us.txt"):
+    m = _STOOQ_MEMBER.match(name)
+    if not m:
         return None
-    return name[:-len(".us.txt")].upper().replace("-", ".")
+    base, country = m.group(1).upper().replace("-", "."), m.group(2)
+    return base + STOOQ_COUNTRY_SUFFIX[country]
 
 
 def universe_symbols() -> list[str]:
@@ -140,26 +147,31 @@ MANUAL_STOOQ_HELP = ("Stooq serves the bulk file only to browsers. Open https://
                      "(or pass --stooq-zip <path>).")
 
 
-def find_stooq_zip(explicit: Path | None) -> Path | None:
+US_ZIP_NAMES = ["d_us_txt.zip"]
+UK_ZIP_NAMES = ["d_uk_txt.zip", "h_uk_txt.zip"]     # daily preferred; hourly is collapsed to daily
+
+
+def find_stooq_zip(explicit: Path | None, names: list[str] | None = None) -> Path | None:
     """First existing candidate: --stooq-zip, the cache, ~/Downloads, the repo root. A file found
     outside the cache is copied into data/.cache/ so later tiers reuse it."""
     import shutil
-    candidates = [explicit, CACHE / "d_us_txt.zip", Path.home() / "Downloads" / "d_us_txt.zip",
-                  ROOT / "d_us_txt.zip"]
+    names = names or US_ZIP_NAMES
+    candidates = [explicit] + [d / n for n in names for d in (CACHE, Path.home() / "Downloads", ROOT)]
     for c in candidates:
         if c and c.exists() and c.stat().st_size > 10_000_000:
-            if c.resolve() != (CACHE / "d_us_txt.zip").resolve():
+            cached = CACHE / c.name
+            if c.resolve() != cached.resolve():
                 CACHE.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(c, CACHE / "d_us_txt.zip")
-                print(f"copied {c} -> {CACHE / 'd_us_txt.zip'}", file=sys.stderr)
-                return CACHE / "d_us_txt.zip"
+                shutil.copy2(c, cached)
+                print(f"copied {c} -> {cached}", file=sys.stderr)
+                return cached
             print(f"using {c}", file=sys.stderr)
             return c
     return None
 
 
 def ensure_stooq_zip(path: Path | None, required: bool = True) -> Path | None:
-    found = find_stooq_zip(path)
+    found = find_stooq_zip(path, US_ZIP_NAMES)
     if found:
         return found
     CACHE.mkdir(parents=True, exist_ok=True)
@@ -189,17 +201,21 @@ def parse_stooq_member(text: str, symbol: str, start: str) -> pd.DataFrame:
         return pd.DataFrame(columns=["date", "symbol", "close", "volume"])
     out = pd.DataFrame({
         "date": pd.to_datetime(df["date"].astype(str), format="%Y%m%d").dt.strftime("%Y-%m-%d"),
+        "time": df["time"].astype(str) if "time" in df.columns else "0",
         "symbol": symbol, "close": df["close"].astype(float),
         "volume": df["vol"].astype(float) if "vol" in df.columns else float("nan")})
-    return out[out["date"] >= start].reset_index(drop=True)
+    out = out[out["date"] >= start]
+    if out["date"].duplicated().any():          # intraday file: keep the last bar of each day
+        out = out.sort_values(["date", "time"]).drop_duplicates("date", keep="last")
+    return out.drop(columns=["time"]).reset_index(drop=True)
 
 
 def stooq_prices(zip_path: Path, wanted: set[str] | None, start: str, stocks_only: bool = False) -> pd.DataFrame:
     """Extract daily closes for `wanted` symbols (None = every US symbol) from the Stooq zip."""
     frames = []
     with zipfile.ZipFile(zip_path) as z:
-        members = [m for m in z.namelist() if m.endswith(".us.txt")]
-        print(f"  zip has {len(members)} US symbol files; e.g. {members[:2]}", file=sys.stderr)
+        members = [m for m in z.namelist() if _STOOQ_MEMBER.match(m.rsplit("/", 1)[-1])]
+        print(f"  {zip_path.name}: {len(members)} symbol files; e.g. {members[:2]}", file=sys.stderr)
         if stocks_only:
             members = [m for m in members if " stocks/" in m]
             print(f"  {len(members)} in 'stocks' folders (ETFs excluded)", file=sys.stderr)
@@ -426,6 +442,8 @@ def main() -> None:
     ap.add_argument("--tier", choices=["core", "watch", "universe"], required=True)
     ap.add_argument("--years", type=int, default=12)
     ap.add_argument("--stooq-zip", type=Path, help="path to a manually downloaded d_us_txt.zip")
+    ap.add_argument("--stooq-uk-zip", type=Path, help="path to d_uk_txt.zip or h_uk_txt.zip (LSE symbols, '.L')")
+    ap.add_argument("--include-uk", action="store_true", help="universe tier: add all UK stocks from the UK zip")
     ap.add_argument("--equity-source", choices=["stooq", "yahoo"], default="stooq")
     ap.add_argument("--no-meta", action="store_true", help="skip market-cap metadata")
     ap.add_argument("--format", choices=["auto", "csv", "parquet"], default="auto",
@@ -470,6 +488,16 @@ def main() -> None:
             print(f"  not in Stooq zip, trying Yahoo for: {missing}", file=sys.stderr)
             frames.append(download_yahoo(missing, start, out_path=None))
         frames.append(to_weekly(daily) if args.tier == "universe" else daily)
+        uk_wanted = {e for e in equities if e.endswith(".L")}
+        if uk_wanted or (args.tier == "universe" and args.include_uk):
+            ukz = find_stooq_zip(args.stooq_uk_zip, UK_ZIP_NAMES)
+            if ukz is None:
+                print(f"  no UK zip found ({UK_ZIP_NAMES} in ~/Downloads or data/.cache); skipping UK", file=sys.stderr)
+            else:
+                uk = stooq_prices(ukz, None if (args.tier == "universe" and args.include_uk) else uk_wanted,
+                                  start, stocks_only=(args.tier == "universe"))
+                print(f"  UK: {uk['symbol'].nunique()} symbols, {len(uk):,} daily rows", file=sys.stderr)
+                frames.append(to_weekly(uk) if args.tier == "universe" else uk)
     elif equities:
         print(f"downloading {len(equities)} equities from Yahoo (slowly, resumable) ...", file=sys.stderr)
         frames.append(download_yahoo(equities, start, out_path=out_path))

@@ -175,6 +175,26 @@ def _stooq_zip(tmp_path):
     return zp
 
 
+def _stooq_uk_hourly_zip(tmp_path):
+    import zipfile
+    hdr = "<TICKER>,<PER>,<DATE>,<TIME>,<OPEN>,<HIGH>,<LOW>,<CLOSE>,<VOL>,<OPENINT>\n"
+    body = hdr + "".join(f"BP.UK,60,20240603,{t},1,1,1,{c},10,0\n" for t, c in
+                         [("090000", 500), ("100000", 505), ("160000", 510)])
+    body += "BP.UK,60,20240604,090000,1,1,1,520,10,0\n"
+    zp = tmp_path / "h_uk_txt.zip"
+    with zipfile.ZipFile(zp, "w") as z:
+        z.writestr("data/hourly/uk/lse stocks/1/bp.uk.txt", body)
+    return zp
+
+
+def test_uk_hourly_collapses_to_daily(tmp_path):
+    zp = _stooq_uk_hourly_zip(tmp_path)
+    assert fd.stooq_to_symbol("data/hourly/uk/lse stocks/1/bp.uk.txt") == "BP.L"
+    d = fd.stooq_prices(zp, {"BP.L"}, start="2020-01-01")
+    assert list(d["date"]) == ["2024-06-03", "2024-06-04"] and list(d["close"]) == [510.0, 520.0]
+    assert fd.stooq_prices(zp, {"NVDA"}, start="2020-01-01").empty
+
+
 def test_stooq_extract_and_symbols(tmp_path):
     zp = _stooq_zip(tmp_path)
     assert fd.stooq_to_symbol("data/daily/us/nyse stocks/1/brk-b.us.txt") == "BRK.B"

@@ -44,3 +44,5 @@ Newest entries at the bottom. Times are UTC.
 - 16:40 Stooq refuses the bulk zip to scripts (401). Script now looks for a browser-downloaded
   d_us_txt.zip in ~/Downloads (and copies it to data/.cache/); core/watch fall back to slow Yahoo if
   no zip is present; universe requires the zip.
+- 16:55 Wade downloaded d_us_txt.zip and h_uk_txt.zip. Added UK support: '.uk.txt' members map to
+  '.L' symbols, intraday files collapse to daily closes, --include-uk adds UK stocks to the universe.

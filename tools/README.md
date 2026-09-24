@@ -22,7 +22,8 @@ command with `uv run`. Dependencies live in `pyproject.toml`; `uv.lock` is commi
 2. `uv run python tools/fetch_data.py --tier universe` (all US common stocks, weekly closes, 12 years,
    Parquet ~10 MB, built from the same zip; market caps from the Nasdaq screener in one request). Commit it.
    If the zip download fails, fetch `d_us_txt.zip` from https://stooq.com/db/h/ in a browser and pass
-   `--stooq-zip <path>`.
+   `--stooq-zip <path>`. A UK zip (`d_uk_txt.zip` or `h_uk_txt.zip`) in the same place adds LSE symbols
+   (`.L`) to the watch tier and, with `--include-uk`, all UK stocks to the universe tier.
 3. Push. The screens can then be re-run in the sandbox:
    ```
    uv run python tools/tenx_screener.py data/universe_prices_1wk.parquet --meta data/universe_meta.csv --out data/tenx_events.csv
