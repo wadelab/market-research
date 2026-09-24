@@ -1,20 +1,20 @@
-symbol,market_cap,shares,last_price,currency,asof,error
-SPY,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-QQQ,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-IWM,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-GLD,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-SLV,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-TLT,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-UUP,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-NVDA,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-TSLA,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-MSTR,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-COIN,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-PLTR,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-SMCI,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-CVNA,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-APP,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-RKLB,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-BTC-USD,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-ETH-USD,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
-SOL-USD,,,,,2026-09-24,Too Many Requests. Rate limited. Try after a while.
+symbol,name,market_cap,last_price,shares,sector,industry,ipo_year,asof,source,fdv,currency
+APP,Applovin Corporation Class A Common Stock,105498727750.0,315.25,334651000.0,Technology,Computer Software: Programming Data Processing,2021,2026-09-24,nasdaq_screener,,
+COIN,Coinbase Global Inc. Class A Common Stock,52274009554.0,198.13,263836923.0000505,Finance,Finance: Consumer Services,,2026-09-24,nasdaq_screener,,
+CVNA,Carvana Co. Class A Common Stock,70374658092.0,63.95,1100463770.0078185,Consumer Discretionary,Retail-Auto Dealers and Gas Stations,2017,2026-09-24,nasdaq_screener,,
+MSTR,Strategy Inc Common Stock Class A,62321416812.0,162.2,384225750.99876696,Technology,Computer Software: Prepackaged Software,1998,2026-09-24,nasdaq_screener,,
+NVDA,NVIDIA Corporation Common Stock,5434791000000.0,225.51,24100000000.0,Technology,Semiconductors,1999,2026-09-24,nasdaq_screener,,
+PLTR,Palantir Technologies Inc. Class A Common Stock,460689836929.0,191.79,2402053479.998957,Technology,Computer Software: Prepackaged Software,,2026-09-24,nasdaq_screener,,
+RKLB,Rocket Lab Corporation Common Stock,44137787249.0,70.31,627759738.9987199,Industrials,Military/Government/Technical,2020,2026-09-24,nasdaq_screener,,
+SMCI,Super Micro Computer Inc. Common Stock,27224645513.0,41.44,656965384.0009652,Technology,Computer Manufacturing,2020,2026-09-24,nasdaq_screener,,
+TSLA,Tesla Inc. Common Stock,1501301955407.0,380.12,3949547393.9992633,Industrials,Auto Manufacturing,2010,2026-09-24,nasdaq_screener,,
+BTC-USD,Bitcoin,1698615522767,84573.0,20088743.0,,,,2026-09-24,coingecko,1698621103436.0,
+ETH-USD,Ethereum,328686025871,2692.95,122076229.26807936,,,,2026-09-24,coingecko,328686025871.0,
+SOL-USD,Solana,69073550405,117.55,587576899.4198546,,,,2026-09-24,coingecko,74602377133.0,
+SPY,,,767.5128784179688,,,,,2026-09-24,yahoo,,USD
+QQQ,,,740.969970703125,,,,,2026-09-24,yahoo,,USD
+IWM,,,281.260009765625,,,,,2026-09-24,yahoo,,USD
+GLD,,,391.4100036621094,,,,,2026-09-24,yahoo,,USD
+SLV,,,57.4822998046875,,,,,2026-09-24,yahoo,,USD
+TLT,,,79.51499938964844,,,,,2026-09-24,yahoo,,USD
+UUP,,,28.709999084472656,,,,,2026-09-24,yahoo,,USD
