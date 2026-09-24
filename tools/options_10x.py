@@ -143,7 +143,7 @@ def leaps_table(S0=100.0, deltas=(0.10, 0.20, 0.30), ivs=(0.40, 0.60, 0.80, 1.00
 
 def leaps_given_move(S0=100.0, moves=(1.0, 2.0, 3.0), ivs=(0.40, 0.60, 0.80, 1.00),
                      deltas=(0.10, 0.20, 0.30), T=1.0, r=R_RISKFREE):
-    print("### LEAPS: multiple delivered AT EXPIRY if the underlying rises +100% / +200% / +300% (T = %.0f yr)\n" % T)
+    print("### LEAPS: multiple delivered AT EXPIRY if the underlying rises +100%%, +200%%, +300%% (T = %.0f yr)\n" % T)
     print("| IV | delta | K/S0 | premium (% of S0) | " + " | ".join("x on +%.0f%%" % (m * 100) for m in moves) + " |")
     print("|" + "---|" * (4 + len(moves)))
     for iv in ivs:
