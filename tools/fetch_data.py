@@ -33,6 +33,7 @@ from __future__ import annotations
 import argparse
 import datetime as dt
 import io
+import re
 import sys
 import time
 import zipfile
@@ -201,7 +202,7 @@ def parse_stooq_member(text: str, symbol: str, start: str) -> pd.DataFrame:
         return pd.DataFrame(columns=["date", "symbol", "close", "volume"])
     out = pd.DataFrame({
         "date": pd.to_datetime(df["date"].astype(str), format="%Y%m%d").dt.strftime("%Y-%m-%d"),
-        "time": df["time"].astype(str) if "time" in df.columns else "0",
+        "time": pd.to_numeric(df["time"], errors="coerce").fillna(0) if "time" in df.columns else 0,
         "symbol": symbol, "close": df["close"].astype(float),
         "volume": df["vol"].astype(float) if "vol" in df.columns else float("nan")})
     out = out[out["date"] >= start]
